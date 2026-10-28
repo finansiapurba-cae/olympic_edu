@@ -1,0 +1,999 @@
+{
+ "dibuat": "2026-10-28",
+ "kelas": {
+  "1": {
+   "total": 66,
+   "tingkat": {
+    "mudah": 27,
+    "sedang": 27,
+    "sulit": 12
+   },
+   "kategori": {
+    "KMNR": 18,
+    "SEAMO": 12,
+    "KOSSMI": 9,
+    "OSN/KSN": 12,
+    "OMNAS": 6,
+    "KSM": 9
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "Penjumlahan",
+      "en": "Addition",
+      "zh": "加法"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Pengurangan",
+      "en": "Subtraction",
+      "zh": "減法"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Pola bilangan",
+      "en": "Number patterns",
+      "zh": "數字規律"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Bilangan",
+      "en": "Numbers",
+      "zh": "數的認識"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Membandingkan bilangan",
+      "en": "Comparing numbers",
+      "zh": "比較大小"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Nilai tempat",
+      "en": "Place value",
+      "zh": "位值"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kalimat matematika",
+      "en": "Number sentences",
+      "zh": "填空算式"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Hari dan waktu",
+      "en": "Days of the week",
+      "zh": "星期"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Soal cerita",
+      "en": "Word problems",
+      "zh": "應用題"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Urutan dan posisi",
+      "en": "Order and position",
+      "zh": "排隊問題"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Jam",
+      "en": "Telling time",
+      "zh": "時間"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Uang",
+      "en": "Money",
+      "zh": "錢"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bilangan ganjil dan genap",
+      "en": "Odd and even numbers",
+      "zh": "奇數與偶數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pengelompokan",
+      "en": "Grouping",
+      "zh": "分組"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Menyusun bilangan",
+      "en": "Making numbers",
+      "zh": "組數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Setengah",
+      "en": "Halves",
+      "zh": "一半"
+     },
+     "jumlah": 3
+    }
+   ]
+  },
+  "2": {
+   "total": 60,
+   "tingkat": {
+    "mudah": 12,
+    "sedang": 27,
+    "sulit": 21
+   },
+   "kategori": {
+    "KMNR": 15,
+    "SEAMO": 9,
+    "OSN/KSN": 12,
+    "KSM": 9,
+    "OMNAS": 9,
+    "KOSSMI": 6
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "Perkalian",
+      "en": "Multiplication",
+      "zh": "乘法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pembagian",
+      "en": "Division",
+      "zh": "除法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Nilai tempat",
+      "en": "Place value",
+      "zh": "位值"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pola bilangan",
+      "en": "Number patterns",
+      "zh": "數字規律"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Uang",
+      "en": "Money",
+      "zh": "錢"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Waktu",
+      "en": "Time",
+      "zh": "時間"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Satuan panjang",
+      "en": "Units of length",
+      "zh": "長度單位"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Soal cerita",
+      "en": "Word problems",
+      "zh": "應用題"
+     },
+     "jumlah": 9
+    },
+    {
+     "nama": {
+      "id": "Menyusun bilangan",
+      "en": "Making numbers",
+      "zh": "組數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Penjumlahan berurutan",
+      "en": "Adding consecutive numbers",
+      "zh": "連續數相加"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pecahan sederhana",
+      "en": "Simple fractions",
+      "zh": "簡單分數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Umur",
+      "en": "Ages",
+      "zh": "年齡問題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kalimat matematika",
+      "en": "Number sentences",
+      "zh": "填空算式"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Jarak dan tiang",
+      "en": "Posts and gaps",
+      "zh": "植樹問題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pembulatan",
+      "en": "Rounding",
+      "zh": "四捨五入"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kalender",
+      "en": "Calendar",
+      "zh": "日曆"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Keliling",
+      "en": "Perimeter",
+      "zh": "周長"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Operasi hitung",
+      "en": "Arithmetic",
+      "zh": "四則運算"
+     },
+     "jumlah": 3
+    }
+   ]
+  },
+  "3": {
+   "total": 60,
+   "tingkat": {
+    "mudah": 18,
+    "sedang": 24,
+    "sulit": 18
+   },
+   "kategori": {
+    "KMNR": 12,
+    "SEAMO": 12,
+    "OSN/KSN": 15,
+    "KOSSMI": 6,
+    "KSM": 9,
+    "OMNAS": 6
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "Luas",
+      "en": "Area",
+      "zh": "面積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Keliling",
+      "en": "Perimeter",
+      "zh": "周長"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pecahan",
+      "en": "Fractions",
+      "zh": "分數"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Membandingkan pecahan",
+      "en": "Comparing fractions",
+      "zh": "比較分數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Satuan berat",
+      "en": "Units of weight",
+      "zh": "重量單位"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pola bilangan",
+      "en": "Number patterns",
+      "zh": "數字規律"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kelipatan",
+      "en": "Multiples",
+      "zh": "倍數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pembagian bersisa",
+      "en": "Division with remainders",
+      "zh": "有餘數的除法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Uang",
+      "en": "Money",
+      "zh": "錢"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Waktu",
+      "en": "Time",
+      "zh": "時間"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Jabat tangan",
+      "en": "Handshakes",
+      "zh": "握手問題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Umur",
+      "en": "Ages",
+      "zh": "年齡問題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Menghitung bangun",
+      "en": "Counting shapes",
+      "zh": "數圖形"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kalender",
+      "en": "Calendar",
+      "zh": "日曆"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Angka satuan",
+      "en": "Last digit",
+      "zh": "個位數字"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Banyak angka",
+      "en": "Counting digits",
+      "zh": "數字個數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Soal cerita",
+      "en": "Word problems",
+      "zh": "應用題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bilangan berurutan",
+      "en": "Consecutive numbers",
+      "zh": "連續整數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Perkalian",
+      "en": "Multiplication",
+      "zh": "乘法"
+     },
+     "jumlah": 3
+    }
+   ]
+  },
+  "4": {
+   "total": 60,
+   "tingkat": {
+    "sedang": 22,
+    "sulit": 21,
+    "mudah": 17
+   },
+   "kategori": {
+    "KMNR": 15,
+    "OSN/KSN": 21,
+    "SEAMO": 9,
+    "KSM": 6,
+    "KOSSMI": 6,
+    "OMNAS": 3
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "KPK",
+      "en": "LCM",
+      "zh": "最小公倍數"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "FPB",
+      "en": "GCF",
+      "zh": "最大公因數"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Faktor",
+      "en": "Factors",
+      "zh": "因數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bilangan prima",
+      "en": "Prime numbers",
+      "zh": "質數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bilangan Romawi",
+      "en": "Roman numerals",
+      "zh": "羅馬數字"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Sudut",
+      "en": "Angles",
+      "zh": "角度"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pecahan senilai",
+      "en": "Equivalent fractions",
+      "zh": "等值分數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Penjumlahan pecahan",
+      "en": "Adding fractions",
+      "zh": "分數加法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Desimal",
+      "en": "Decimals",
+      "zh": "小數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Luas gabungan",
+      "en": "Composite area",
+      "zh": "組合圖形面積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pembulatan",
+      "en": "Rounding",
+      "zh": "四捨五入"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Keliling dan luas",
+      "en": "Perimeter and area",
+      "zh": "周長與面積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pola bilangan",
+      "en": "Number patterns",
+      "zh": "數字規律"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Operasi hitung campuran",
+      "en": "Order of operations",
+      "zh": "四則混合運算"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kelipatan",
+      "en": "Multiples",
+      "zh": "倍數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Satuan panjang",
+      "en": "Units of length",
+      "zh": "長度單位"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Uang",
+      "en": "Money",
+      "zh": "錢"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Angka satuan",
+      "en": "Last digit",
+      "zh": "個位數字"
+     },
+     "jumlah": 3
+    }
+   ]
+  },
+  "5": {
+   "total": 60,
+   "tingkat": {
+    "mudah": 15,
+    "sedang": 24,
+    "sulit": 21
+   },
+   "kategori": {
+    "KMNR": 15,
+    "SEAMO": 9,
+    "OSN/KSN": 15,
+    "KSM": 9,
+    "KOSSMI": 3,
+    "OMNAS": 9
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "Volume kubus",
+      "en": "Volume of a cube",
+      "zh": "正方體體積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Volume balok",
+      "en": "Volume of a cuboid",
+      "zh": "長方體體積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kecepatan",
+      "en": "Speed",
+      "zh": "速率"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Persen",
+      "en": "Percentages",
+      "zh": "百分率"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Diskon",
+      "en": "Discounts",
+      "zh": "折扣"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Perbandingan",
+      "en": "Ratios",
+      "zh": "比"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Rata-rata",
+      "en": "Averages",
+      "zh": "平均數"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Bilangan bulat",
+      "en": "Integers",
+      "zh": "整數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Akar pangkat tiga",
+      "en": "Cube roots",
+      "zh": "立方根"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pola bilangan",
+      "en": "Number patterns",
+      "zh": "數字規律"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Skala",
+      "en": "Map scale",
+      "zh": "比例尺"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Debit",
+      "en": "Flow rate",
+      "zh": "流量"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Perkalian pecahan",
+      "en": "Multiplying fractions",
+      "zh": "分數乘法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pembagian pecahan",
+      "en": "Dividing fractions",
+      "zh": "分數除法"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bangun ruang",
+      "en": "3D shapes",
+      "zh": "立體圖形"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Pekerjaan bersama",
+      "en": "Working together",
+      "zh": "工程問題"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Umur",
+      "en": "Ages",
+      "zh": "年齡問題"
+     },
+     "jumlah": 3
+    }
+   ]
+  },
+  "6": {
+   "total": 63,
+   "tingkat": {
+    "sedang": 30,
+    "mudah": 15,
+    "sulit": 18
+   },
+   "kategori": {
+    "SEAMO": 12,
+    "KMNR": 15,
+    "OSN/KSN": 18,
+    "KSM": 6,
+    "KOSSMI": 6,
+    "OMNAS": 6
+   },
+   "topik": [
+    {
+     "nama": {
+      "id": "Luas lingkaran",
+      "en": "Area of a circle",
+      "zh": "圓面積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Keliling lingkaran",
+      "en": "Circumference",
+      "zh": "圓周長"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Volume tabung",
+      "en": "Volume of a cylinder",
+      "zh": "圓柱體積"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bilangan bulat",
+      "en": "Integers",
+      "zh": "整數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Statistika",
+      "en": "Statistics",
+      "zh": "統計"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "KPK",
+      "en": "LCM",
+      "zh": "最小公倍數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "FPB",
+      "en": "GCF",
+      "zh": "最大公因數"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Peluang",
+      "en": "Probability",
+      "zh": "機率"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Kaidah pencacahan",
+      "en": "Counting",
+      "zh": "計數原理"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Koordinat",
+      "en": "Coordinates",
+      "zh": "坐標"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Barisan bilangan",
+      "en": "Sequences",
+      "zh": "數列"
+     },
+     "jumlah": 6
+    },
+    {
+     "nama": {
+      "id": "Perpangkatan",
+      "en": "Powers",
+      "zh": "次方"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Angka satuan",
+      "en": "Last digit",
+      "zh": "個位數字"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Perbandingan berbalik nilai",
+      "en": "Inverse proportion",
+      "zh": "反比"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Geometri",
+      "en": "Geometry",
+      "zh": "幾何"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Akar kuadrat",
+      "en": "Square roots",
+      "zh": "平方根"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Bunga tabungan",
+      "en": "Savings interest",
+      "zh": "存款利息"
+     },
+     "jumlah": 3
+    },
+    {
+     "nama": {
+      "id": "Rata-rata gabungan",
+      "en": "Combined average",
+      "zh": "合併平均數"
+     },
+     "jumlah": 3
+    }
+   ]
+  }
+ },
+ "paket": [
+  {
+   "id": "osd-2025-1",
+   "judul": {
+    "id": "Soal Olimpiade Matematika SD 2025 · Paket 1",
+    "en": "Primary Math Olympiad Questions 2025 · Set 1",
+    "zh": "2025 小學數學奧林匹亞試題 · 第 1 套"
+   },
+   "deskripsi": {
+    "id": "Soal campuran untuk kelas 4–6",
+    "en": "Mixed questions for grades 4–6",
+    "zh": "4–6 年級綜合題"
+   },
+   "total": 49,
+   "kelas": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "osd-2025-2",
+   "judul": {
+    "id": "Soal Olimpiade Matematika SD 2025 · Paket 2",
+    "en": "Primary Math Olympiad Questions 2025 · Set 2",
+    "zh": "2025 小學數學奧林匹亞試題 · 第 2 套"
+   },
+   "deskripsi": {
+    "id": "Soal untuk kelas 5",
+    "en": "Questions for grade 5",
+    "zh": "5 年級題目"
+   },
+   "total": 18,
+   "kelas": [
+    5
+   ]
+  }
+ ]
+}
