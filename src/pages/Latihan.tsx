@@ -297,7 +297,7 @@ export default function Latihan({
         <BarKemajuan nilai={kemajuan.nilai} maks={kemajuan.maks} label={mode === "ulang" ? t.kemajuanUlang : t.kemajuanPutaran} />
       </div>
 
-      <dl className="mt-4 grid grid-cols-4 gap-2 rounded-xl bg-gradient-to-r from-utama-muda via-[#E6FAFB] to-jingga-muda p-3 text-center tabular-nums ring-1 ring-garis">
+      <dl className="mt-4 grid grid-cols-4 gap-2 rounded-xl bg-gradient-to-r from-utama-muda via-[#EEF9FB] to-[#E6FFFB] p-3 text-center tabular-nums ring-1 ring-garis">
         {[
           [t.soal, sesi.dijawab + (diperiksa ? 0 : 1)],
           [t.benar, sesi.benar],

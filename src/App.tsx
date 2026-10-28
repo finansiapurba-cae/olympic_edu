@@ -57,7 +57,7 @@ function Aplikasi() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-halaman to-[#FFF4E6] font-sans text-tinta">
+    <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-halaman to-[#E8FAF7] font-sans text-tinta">
       <Navbar nama={progres.nama} onNama={(nama) => ubah((p) => ({ ...p, nama }))} halaman={halaman} onPindah={pindah} />
       {halaman === "beranda" && <Beranda progres={progres} awal={pengaturan} onMulai={mulai} />}
       {halaman === "latihan" && (
@@ -80,7 +80,7 @@ function Aplikasi() {
 
       {badgeBaru[0] && (
         <div
-          className="fixed right-4 z-40 flex w-[calc(100%-2rem)] max-w-sm items-center gap-3 rounded-2xl bg-gradient-to-br from-[#0B1F4B] via-[#1E40AF] to-[#0E7490] p-4 text-white shadow-kartu ring-2 ring-jingga"
+          className="fixed right-4 z-40 flex w-[calc(100%-2rem)] max-w-sm items-center gap-3 rounded-2xl bg-gradient-to-br from-[#1E3A8A] via-[#1D5FA6] to-[#0D9488] p-4 text-white shadow-kartu ring-2 ring-[#2DD4BF]"
           style={{ top: "calc(env(safe-area-inset-top, 0px) + 12px)" }}
           role="status"
         >

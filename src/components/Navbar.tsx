@@ -27,7 +27,7 @@ export default function Navbar({
     </button>
   );
   return (
-    <header className="bg-gradient-to-r from-[#0B1F4B] via-[#1E3A8A] to-[#0E7490] text-white" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+    <header className="bg-gradient-to-r from-[#1E3A8A] via-[#1D5FA6] to-[#0D9488] text-white" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
         <button type="button" onClick={() => onPindah("beranda")} className="flex items-center gap-3 text-left">
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-navy-700 to-utama text-2xl font-extrabold leading-none text-sigma ring-1 ring-white/15" aria-hidden="true">
@@ -53,7 +53,7 @@ export default function Navbar({
                 aria-pressed={bahasa === b.kode}
                 onClick={() => setBahasa(b.kode)}
                 className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition-colors ${
-                  bahasa === b.kode ? "bg-gradient-to-r from-sigma to-jingga text-navy" : "text-white/75 hover:bg-white/10 hover:text-white"
+                  bahasa === b.kode ? "bg-gradient-to-r from-[#99F6E4] to-[#2DD4BF] text-[#0B1F4B]" : "text-white/75 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {b.label}
@@ -72,7 +72,7 @@ export default function Navbar({
           </label>
         </div>
       </div>
-      <div className="h-1 bg-gradient-to-r from-sigma via-jingga to-[#FF5E3A]" aria-hidden="true" />
+      <div className="h-1 bg-gradient-to-r from-[#3B82F6] via-[#2DD4BF] to-[#C9A13B]" aria-hidden="true" />
     </header>
   );
 }

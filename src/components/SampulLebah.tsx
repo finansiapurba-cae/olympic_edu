@@ -33,16 +33,16 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
   const { t } = useBahasa();
   return (
     <div className="mx-auto w-full max-w-3xl px-4 pt-8 sm:px-6 sm:pt-12">
-    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF6D9] via-madu to-[#FFD2A6] shadow-kartu">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(242,132,27,.35),transparent_42%),radial-gradient(circle_at_95%_95%,rgba(245,197,24,.55),transparent_38%)]" aria-hidden="true" />
+    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#F4FBFF] via-[#E9F8F7] to-[#C9EEEA] shadow-kartu">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(59,130,246,.18),transparent_42%),radial-gradient(circle_at_95%_95%,rgba(20,184,166,.32),transparent_40%)]" aria-hidden="true" />
       {/* lapisan chevron (desktop) */}
       <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
         {FOTO && <img src={FOTO} alt="" className="absolute inset-y-0 right-0 h-full w-[52%] object-cover object-[50%_30%]" />}
-        <div className={`absolute inset-0 bg-gradient-to-b from-[#FFA24A] to-[#E5600A] ${CHEVRON_JINGGA}`} />
-        <div className={`absolute inset-0 bg-gradient-to-b from-[#FFE066] to-[#F5B700] ${CHEVRON_KUNING}`} />
-        <div className={`absolute inset-0 bg-gradient-to-br from-[#0B1F4B] via-[#1E40AF] to-[#0E7490] ${CHEVRON_NAVY}`}>
-          <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-jingga/25 blur-3xl" />
-          <div className="absolute -top-20 left-1/3 h-56 w-56 rounded-full bg-[#22D3EE]/25 blur-3xl" />
+        <div className={`absolute inset-0 bg-gradient-to-b from-[#2DD4BF] to-[#0F766E] ${CHEVRON_JINGGA}`} />
+        <div className={`absolute inset-0 bg-gradient-to-b from-[#F3D27A] to-[#C9A13B] ${CHEVRON_KUNING}`} />
+        <div className={`absolute inset-0 bg-gradient-to-br from-[#1E3A8A] via-[#1D5FA6] to-[#0D9488] ${CHEVRON_NAVY}`}>
+          <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-[#2DD4BF]/25 blur-3xl" />
+          <div className="absolute -top-20 left-1/3 h-56 w-56 rounded-full bg-[#60A5FA]/25 blur-3xl" />
           {IKON.map((i) => (
             <Ikon key={i.c} d={i.d} className={i.c} />
           ))}
@@ -51,8 +51,8 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
 
       <div className="relative grid md:min-h-[400px] md:grid-cols-[47%_53%]">
         {/* panel kiri */}
-        <div className="relative bg-gradient-to-r from-[#FFE066] via-sigma to-jingga pb-3 [clip-path:polygon(0_0,100%_0,100%_calc(100%-28px),50%_100%,0_calc(100%-28px))] md:bg-none md:pb-0 md:[clip-path:none]">
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1F4B] via-[#1E40AF] to-[#0E7490] px-6 pb-16 pt-10 [clip-path:polygon(0_0,100%_0,100%_calc(100%-40px),50%_calc(100%-6px),0_calc(100%-40px))] sm:px-10 md:h-full md:bg-none md:pb-12 md:pr-4 md:pt-12 md:[clip-path:none]">
+        <div className="relative bg-gradient-to-r from-[#C9A13B] via-[#14B8A6] to-[#0F766E] pb-3 [clip-path:polygon(0_0,100%_0,100%_calc(100%-28px),50%_100%,0_calc(100%-28px))] md:bg-none md:pb-0 md:[clip-path:none]">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#1E3A8A] via-[#1D5FA6] to-[#0D9488] px-6 pb-16 pt-10 [clip-path:polygon(0_0,100%_0,100%_calc(100%-40px),50%_calc(100%-6px),0_calc(100%-40px))] sm:px-10 md:h-full md:bg-none md:pb-12 md:pr-4 md:pt-12 md:[clip-path:none]">
             <div className="md:hidden" aria-hidden="true">
               {IKON.slice(0, 4).map((i, k) => (
                 <Ikon key={i.c} d={i.d} className={["right-4 top-6", "right-20 bottom-14", "left-1/2 top-4", "right-6 top-1/2"][k]} />
@@ -61,7 +61,7 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
             <div className="relative max-w-sm">
               <h1 className="font-extrabold uppercase leading-[0.95] tracking-tight">
                 <span className="block text-5xl text-white md:text-[2.75rem]">{t.bannerBaris1}</span>
-                <span className="block bg-gradient-to-r from-[#FFE066] via-sigma to-[#FF8A2A] bg-clip-text pb-1 text-5xl text-transparent md:text-[2.75rem]">{t.bannerBaris2}</span>
+                <span className="block bg-gradient-to-r from-[#FDE68A] via-[#A7F3D0] to-[#5EEAD4] bg-clip-text pb-1 text-5xl text-transparent md:text-[2.75rem]">{t.bannerBaris2}</span>
               </h1>
               <p className="mt-3 text-lg font-semibold italic text-white/90">{t.bannerSub}</p>
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">{t.sampulIsi}</p>
@@ -69,7 +69,7 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
                 <button
                   type="button"
                   onClick={onMulai}
-                  className="rounded-full bg-gradient-to-r from-[#FFE066] to-sigma px-7 py-3 text-base font-extrabold text-navy shadow-[0_8px_24px_-8px_rgba(245,197,24,.8)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sigma/50"
+                  className="rounded-full bg-white px-7 py-3 text-base font-extrabold text-[#1E3A8A] shadow-[0_8px_24px_-10px_rgba(15,23,42,.6)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sigma/50"
                 >
                   {t.bannerMulai}
                 </button>
@@ -77,7 +77,7 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
                   <button
                     type="button"
                     onClick={onPaket}
-                    className="rounded-full bg-gradient-to-r from-[#FFB347] to-[#F2741B] px-6 py-3 text-base font-bold text-navy shadow-[0_8px_24px_-8px_rgba(242,132,27,.8)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-jingga/50"
+                    className="rounded-full border-2 border-white/70 bg-white/10 px-6 py-2.5 text-base font-bold text-white backdrop-blur transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-jingga/50"
                   >
                     {t.sampulPaket}
                   </button>
@@ -94,7 +94,7 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
                   olympicedu.netlify.app
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-sigma to-jingga text-navy" aria-hidden="true">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-[#5EEAD4] to-[#14B8A6] text-[#0B1F4B]" aria-hidden="true">
                     <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
                       <path d="M3 5h8M7 3v2M5 5c0 3 2 6 5 7M9 5c0 3-2 6-5 7M11 17l3.5-8 3.5 8M12.2 14.5h4.6" />
                     </svg>
@@ -108,16 +108,16 @@ export default function SampulLebah({ onMulai, onPaket, jumlahSoal, jumlahPaket 
 
         {/* panel kanan: maskot */}
         <div className="relative flex items-center justify-center px-4 pb-8 pt-4 sm:px-6 md:pb-6 md:pl-14 md:pr-4 md:pt-20">
-          <div className="absolute right-4 top-4 hidden items-center gap-2 rounded-full bg-white/80 py-1.5 pl-1.5 pr-4 shadow-kartu ring-1 ring-jingga/30 sm:flex md:right-5 md:top-5">
+          <div className="absolute right-4 top-4 hidden items-center gap-2 rounded-full bg-white/80 py-1.5 pl-1.5 pr-4 shadow-kartu ring-1 ring-[#14B8A6]/30 sm:flex md:right-5 md:top-5">
             <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-navy to-utama text-lg font-extrabold text-sigma" aria-hidden="true">
               Σ
             </span>
             <span className="text-sm font-extrabold text-navy">Olympic Edu</span>
           </div>
-          <div className="absolute left-4 top-2 z-10 grid h-24 w-24 place-items-center rounded-full bg-white text-center border-[5px] border-transparent shadow-kartu [background:linear-gradient(#fff,#fff)_padding-box,conic-gradient(from_180deg,#F5C518,#F2841B,#FF5E3A,#F5C518)_border-box] md:left-0 md:top-6">
+          <div className="absolute left-4 top-2 z-10 grid h-24 w-24 place-items-center rounded-full bg-white text-center border-[5px] border-transparent shadow-kartu [background:linear-gradient(#fff,#fff)_padding-box,conic-gradient(from_180deg,#1E40AF,#14B8A6,#5EEAD4,#1E40AF)_border-box] md:left-0 md:top-6">
             <span>
-              <span className="block bg-gradient-to-br from-navy to-utama bg-clip-text text-3xl font-extrabold leading-none text-transparent tabular-nums">{jumlahSoal + jumlahPaket}</span>
-              <span className="mt-1 block text-xs font-extrabold uppercase tracking-wider text-jingga-tua">{t.bannerSoal}</span>
+              <span className="block bg-gradient-to-br from-[#1E3A8A] to-[#0D9488] bg-clip-text text-3xl font-extrabold leading-none text-transparent tabular-nums">{jumlahSoal + jumlahPaket}</span>
+              <span className="mt-1 block text-xs font-extrabold uppercase tracking-wider text-[#0F766E]">{t.bannerSoal}</span>
             </span>
           </div>
           {FOTO ? (
