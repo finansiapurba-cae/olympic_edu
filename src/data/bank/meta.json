@@ -961,6 +961,7 @@
  "paket": [
   {
    "id": "osd-2025-1",
+   "kategori": "indonesia",
    "judul": {
     "id": "Soal Olimpiade Matematika SD 2025 · Paket 1",
     "en": "Primary Math Olympiad Questions 2025 · Set 1",
@@ -980,6 +981,7 @@
   },
   {
    "id": "osd-2025-2",
+   "kategori": "indonesia",
    "judul": {
     "id": "Soal Olimpiade Matematika SD 2025 · Paket 2",
     "en": "Primary Math Olympiad Questions 2025 · Set 2",
@@ -993,6 +995,126 @@
    "total": 18,
    "kelas": [
     5
+   ]
+  },
+  {
+   "id": "osn-latihan-1",
+   "kategori": "indonesia",
+   "judul": {
+    "id": "Olimpiade Indonesia · Latihan Level 1",
+    "en": "Indonesia Olympiad · Practice Level 1",
+    "zh": "印尼奧林匹亞 · 練習第 1 級"
+   },
+   "deskripsi": {
+    "id": "Gaya OSN/KSN untuk kelas 1–3",
+    "en": "OSN/KSN style for grades 1–3",
+    "zh": "OSN/KSN 風格，1–3 年級"
+   },
+   "total": 12,
+   "kelas": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "id": "osn-latihan-2",
+   "kategori": "indonesia",
+   "judul": {
+    "id": "Olimpiade Indonesia · Latihan Level 2",
+    "en": "Indonesia Olympiad · Practice Level 2",
+    "zh": "印尼奧林匹亞 · 練習第 2 級"
+   },
+   "deskripsi": {
+    "id": "Gaya OSN/KSN untuk kelas 4–6",
+    "en": "OSN/KSN style for grades 4–6",
+    "zh": "OSN/KSN 風格，4–6 年級"
+   },
+   "total": 12,
+   "kelas": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "intl-latihan-1",
+   "kategori": "internasional",
+   "judul": {
+    "id": "Olimpiade Internasional · Latihan Level 1",
+    "en": "International Olympiad · Practice Level 1",
+    "zh": "國際奧林匹亞 · 練習第 1 級"
+   },
+   "deskripsi": {
+    "id": "Gaya SEAMO/Kangaroo untuk kelas 1–3",
+    "en": "SEAMO/Kangaroo style for grades 1–3",
+    "zh": "SEAMO/袋鼠數學風格，1–3 年級"
+   },
+   "total": 12,
+   "kelas": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "id": "intl-latihan-2",
+   "kategori": "internasional",
+   "judul": {
+    "id": "Olimpiade Internasional · Latihan Level 2",
+    "en": "International Olympiad · Practice Level 2",
+    "zh": "國際奧林匹亞 · 練習第 2 級"
+   },
+   "deskripsi": {
+    "id": "Gaya SEAMO/Kangaroo untuk kelas 4–6",
+    "en": "SEAMO/Kangaroo style for grades 4–6",
+    "zh": "SEAMO/袋鼠數學風格，4–6 年級"
+   },
+   "total": 12,
+   "kelas": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "standar-1",
+   "kategori": "standar",
+   "judul": {
+    "id": "Soal Standar · Kelas 1–3",
+    "en": "Standard Questions · Grades 1–3",
+    "zh": "標準題 · 1–3 年級"
+   },
+   "deskripsi": {
+    "id": "Soal latihan biasa sesuai pelajaran sekolah",
+    "en": "Regular practice that follows school lessons",
+    "zh": "配合學校課程的一般練習"
+   },
+   "total": 12,
+   "kelas": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "id": "standar-2",
+   "kategori": "standar",
+   "judul": {
+    "id": "Soal Standar · Kelas 4–6",
+    "en": "Standard Questions · Grades 4–6",
+    "zh": "標準題 · 4–6 年級"
+   },
+   "deskripsi": {
+    "id": "Soal latihan biasa sesuai pelajaran sekolah",
+    "en": "Regular practice that follows school lessons",
+    "zh": "配合學校課程的一般練習"
+   },
+   "total": 12,
+   "kelas": [
+    4,
+    5,
+    6
    ]
   }
  ]

@@ -4,7 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import katex from "katex";
 import { buildKelas, LANGS, rapikanRumus, PENUTUP } from "./soal/lib.mjs";
-import DAFTAR_PAKET from "./paket/paket-2025.mjs";
+import PAKET_2025 from "./paket/paket-2025.mjs";
+import PAKET_LATIHAN from "./paket/paket-latihan.mjs";
 import VISUAL_PAKET from "./paket/visual-2025.mjs";
 
 // Jenis gambar bantu yang dikenal komponen src/components/Visualisasi.tsx.
@@ -85,11 +86,17 @@ for (let k = 1; k <= 6; k++) {
 }
 // Paket soal olimpiade: kunci jawaban ditulis manual, jadi diperiksa ketat.
 const HURUF = ["A", "B", "C", "D"];
+const KATEGORI_PAKET = ["indonesia", "internasional", "standar"];
+const DAFTAR_PAKET = [...PAKET_2025.map((p) => ({ kategori: "indonesia", ...p })), ...PAKET_LATIHAN];
 const paketOut = [];
 const semuaTeks = new Map(all.map((q) => [q.teks.id.pertanyaan.replace(/\s+/g, " ").toLowerCase(), q.id]));
 for (const p of DAFTAR_PAKET) {
-  const vis = VISUAL_PAKET[p.id] ?? [];
-  if (vis.length !== p.soal.length) errors.push(`${p.id}: ${vis.length} gambar untuk ${p.soal.length} soal`);
+  if (!KATEGORI_PAKET.includes(p.kategori)) errors.push(`${p.id}: kategori "${p.kategori}" tidak dikenal`);
+  // Gambar bantu: dari soal itu sendiri (paket latihan) atau dari visual-2025.mjs.
+  const vis = p.soal.map((s, i) => {
+    const v = s.visual ?? VISUAL_PAKET[p.id]?.[i];
+    return v === undefined ? undefined : typeof v === "function" ? v : () => v;
+  });
   const soal = p.soal.map((s, i) => {
     const id = `${p.id}-${String(i + 1).padStart(2, "0")}`;
     if (!HURUF.includes(s.kunci)) errors.push(`${id}: kunci tidak valid`);
@@ -118,11 +125,11 @@ for (const p of DAFTAR_PAKET) {
       ...(s.koreksi ? { koreksi: { id: rapikanRumus(s.koreksi[0]), en: rapikanRumus(s.koreksi[1]), zh: rapikanRumus(s.koreksi[2]) } } : {}),
     };
   });
-  paketOut.push({ id: p.id, judul: p.judul, deskripsi: p.deskripsi, soal });
+  paketOut.push({ id: p.id, kategori: p.kategori, judul: p.judul, deskripsi: p.deskripsi, soal });
   console.log(`${p.judul.id}: ${soal.length} soal`);
 }
 fs.writeFileSync(path.join(OUT, "paket.json"), JSON.stringify(paketOut));
-meta.paket = paketOut.map((p) => ({ id: p.id, judul: p.judul, deskripsi: p.deskripsi, total: p.soal.length, kelas: [...new Set(p.soal.map((s) => s.kelas))].sort() }));
+meta.paket = paketOut.map((p) => ({ id: p.id, kategori: p.kategori, judul: p.judul, deskripsi: p.deskripsi, total: p.soal.length, kelas: [...new Set(p.soal.map((s) => s.kelas))].sort() }));
 fs.writeFileSync(path.join(OUT, "meta.json"), JSON.stringify(meta, null, 1));
 
 for (const [k, m] of Object.entries(meta.kelas)) console.log(`Kelas ${k}: ${m.total} soal`, m.tingkat);

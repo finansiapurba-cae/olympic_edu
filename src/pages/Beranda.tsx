@@ -6,7 +6,10 @@ import SampulLebah from "../components/SampulLebah";
 import { meta, KATEGORI_OSN } from "../data/bank";
 import { useBahasa } from "../i18n";
 import { kunciKelompok, salahUntukKelas } from "../lib/progres";
-import type { Kelas, PengaturanSesi, PilihanTingkat, Progres } from "../types";
+import type { KategoriPaket, Kelas, PengaturanSesi, PilihanTingkat, Progres } from "../types";
+
+const KATEGORI: KategoriPaket[] = ["indonesia", "internasional", "standar"];
+const IKON_KATEGORI: Record<KategoriPaket, string> = { indonesia: "🇮🇩", internasional: "🌏", standar: "📘" };
 
 const KELAS: Kelas[] = [1, 2, 3, 4, 5, 6];
 const TINGKAT: PilihanTingkat[] = ["mudah", "sedang", "sulit", "campuran"];
@@ -19,6 +22,7 @@ const gulirKe = (id: string) => document.getElementById(id)?.scrollIntoView({ be
 export default function Beranda({ progres, awal, onMulai }: { progres: Progres; awal: PengaturanSesi; onMulai: (s: PengaturanSesi) => void }) {
   const { t, bahasa, locale } = useBahasa();
   const [kelas, setKelas] = useState<Kelas>(awal.kelas);
+  const [kategori, setKategori] = useState<KategoriPaket>("indonesia");
   const [tingkat, setTingkat] = useState<PilihanTingkat>(awal.tingkat);
   const [pakaiTimer, setPakaiTimer] = useState(awal.mode === "simulasi");
   const [durasi, setDurasi] = useState(awal.durasiMenit);
@@ -157,8 +161,26 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
                 <p className="mt-1 text-sm text-redup">{t.paketIsi}</p>
               </div>
             </div>
-            <ul className="mt-5 grid gap-3">
-              {meta.paket.map((p) => {
+            <div className="mt-5 grid grid-cols-3 gap-2" role="tablist" aria-label={t.paketJudul}>
+              {KATEGORI.map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  role="tab"
+                  aria-selected={kategori === k}
+                  onClick={() => setKategori(k)}
+                  className={`flex flex-col items-center gap-0.5 rounded-2xl px-2 py-3 text-center text-sm font-bold transition-colors sm:flex-row sm:justify-center sm:gap-2 ${kategori === k ? "bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] text-white shadow" : "bg-halaman text-tinta hover:bg-[#E0F2FE]"}`}
+                >
+                  <span className="text-lg" aria-hidden="true">
+                    {IKON_KATEGORI[k]}
+                  </span>
+                  {t.kategoriPaket[k][0]}
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 text-sm text-redup">{t.kategoriPaket[kategori][1]}</p>
+            <ul className="mt-3 grid gap-3">
+              {meta.paket.filter((p) => p.kategori === kategori).map((p) => {
                 const n = progres.sudahDikerjakan[`paket-${p.id}`]?.length ?? 0;
                 return (
                   <li key={p.id} className="flex flex-wrap items-center gap-4 rounded-2xl bg-gradient-to-br from-[#EFF6FF] via-white to-[#E0F2FE] p-4 ring-1 ring-[#38BDF8]/20">

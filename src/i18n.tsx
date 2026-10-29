@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { Bahasa, ModeSesi, PilihanTingkat } from "./types";
+import type { Bahasa, KategoriPaket, ModeSesi, PilihanTingkat } from "./types";
 
 export type { Bahasa };
 export const BAHASA: { kode: Bahasa; label: string; nama: string; locale: string }[] = [
@@ -19,12 +19,13 @@ const id = {
   sampulJudul: "Rajin seperti lebah, cerdas dalam matematika.",
   sampulIsi: "Kumpulkan poin dari setiap soal yang kamu jawab, seperti lebah mengumpulkan madu. Ada pembahasan langkah demi langkah di setiap soal.",
   sampulMulai: "Mulai latihan",
-  sampulPaket: "Paket olimpiade 2025",
-  sampulStat: (soal: number, paket: number) => [`${soal} soal latihan`, `${paket} soal olimpiade`, "Kelas 1–6", "3 bahasa"],
+  sampulPaket: "Paket soal",
+  sampulStat: (soal: number, paket: number) => [`${soal} soal latihan`, `${paket} soal paket`, "Kelas 1–6", "3 bahasa"],
   sampulGambar: "Murid SD berseragam melambai, dikelilingi buku, pensil, roket, dan simbol matematika, dengan lebah yang terbang mengitarinya",
   sampulFoto: "Murid SD belajar di kelas",
-  paketJudul: "Paket soal olimpiade",
-  paketIsi: "Kumpulan soal olimpiade yang dikerjakan berurutan dari nomor 1. Kunci dan pembahasan sudah diperiksa ulang.",
+  paketJudul: "Paket soal",
+  paketIsi: "Kumpulan soal yang dikerjakan berurutan dari nomor 1, lengkap dengan pembahasan dan gambar bantu.",
+  kategoriPaket: { indonesia: ["Olimpiade Indonesia", "Soal gaya OSN/KSN, termasuk soal olimpiade 2025."], internasional: ["Olimpiade Internasional", "Soal gaya SEAMO, Kangaroo, dan SASMO: teka-teki dan penalaran."], standar: ["Soal Standar", "Latihan biasa sesuai pelajaran di sekolah, bukan soal olimpiade."] } as Record<KategoriPaket, [string, string]>,
   paketKelas: (k: number[]) => `Kelas ${k.join(", ")}`,
   paketMulai: "Kerjakan paket",
   paketSudah: (a: number, b: number) => `${a} dari ${b} soal sudah dikerjakan`,
@@ -77,7 +78,7 @@ const id = {
   sumberIsi: (tgl: string) =>
     `Semua soal di sini adalah soal orisinal yang dibuat untuk latihan. Label kategori (OSN/KSN, SEAMO, KMNR, OMNAS, KOSSMI, KSM) menunjukkan gaya soal kompetisi yang menjadi inspirasinya, bukan soal resmi dari kompetisi tersebut. Kunci jawaban dihitung otomatis dari angka di soal dan diperiksa sebelum dimasukkan ke bank soal. Setiap soal tersedia dalam bahasa Indonesia, Inggris, dan Mandarin Tradisional. Paket soal olimpiade berasal dari dokumen latihan yang dikumpulkan; kunci jawabannya dikerjakan ulang, dan pilihan yang keliru di dokumen asli diperbaiki serta diberi catatan. Bank soal diperbarui ${tgl}.`,
 
-  modeNama: { latihan: "Latihan bebas", simulasi: "Simulasi kompetisi", ulang: "Ulangi yang salah", osn: "Gaya OSN/KSN", paket: "Paket olimpiade" } as Record<ModeSesi, string>,
+  modeNama: { latihan: "Latihan bebas", simulasi: "Simulasi kompetisi", ulang: "Ulangi yang salah", osn: "Gaya OSN/KSN", paket: "Paket soal" } as Record<ModeSesi, string>,
   menyiapkan: "Menyiapkan soal…",
   kosongJudul: "Belum ada soal untuk dikerjakan",
   kosongUlang: (k: number) => `Tidak ada soal salah untuk Kelas ${k} SD. Bagus sekali!`,
@@ -180,12 +181,13 @@ const en: Kamus = {
   sampulJudul: "Busy as a bee, brilliant at maths.",
   sampulIsi: "Collect points for every question you answer, just like a bee collects honey. Every question comes with a step-by-step explanation.",
   sampulMulai: "Start practising",
-  sampulPaket: "2025 olympiad sets",
-  sampulStat: (soal, paket) => [`${soal} practice questions`, `${paket} olympiad questions`, "Grades 1–6", "3 languages"],
+  sampulPaket: "Question sets",
+  sampulStat: (soal, paket) => [`${soal} practice questions`, `${paket} set questions`, "Grades 1–6", "3 languages"],
   sampulGambar: "A primary school student in uniform waving, surrounded by a book, pencil, rocket and maths symbols, with a bee flying around",
   sampulFoto: "Primary school students learning in class",
-  paketJudul: "Olympiad question sets",
-  paketIsi: "Olympiad questions answered in order from number 1. Answers and explanations have been checked again.",
+  paketJudul: "Question sets",
+  paketIsi: "Question sets answered in order from number 1, with explanations and pictures.",
+  kategoriPaket: { indonesia: ["Indonesia Olympiad", "OSN/KSN-style questions, including the 2025 olympiad papers."], internasional: ["International Olympiad", "SEAMO, Kangaroo and SASMO style: puzzles and reasoning."], standar: ["Standard", "Regular practice that follows school lessons, not olympiad questions."] },
   paketKelas: (k) => `Grade ${k.join(", ")}`,
   paketMulai: "Start this set",
   paketSudah: (a, b) => `${a} of ${b} questions done`,
@@ -238,7 +240,7 @@ const en: Kamus = {
   sumberIsi: (tgl) =>
     `All questions here are original practice questions. The category labels (OSN/KSN, SEAMO, KMNR, OMNAS, KOSSMI, KSM) show which competition style inspired each question; they are not official questions from those competitions. Answers are calculated automatically from the numbers in each question and checked before they are added to the bank. Every question is available in Indonesian, English and Traditional Chinese. The olympiad question sets come from collected practice documents; their answers were worked out again, and wrong options in the original documents were corrected and marked with a note. Question bank updated ${tgl}.`,
 
-  modeNama: { latihan: "Free practice", simulasi: "Competition simulation", ulang: "Retry wrong answers", osn: "OSN/KSN style", paket: "Olympiad set" },
+  modeNama: { latihan: "Free practice", simulasi: "Competition simulation", ulang: "Retry wrong answers", osn: "OSN/KSN style", paket: "Question set" },
   menyiapkan: "Getting questions ready…",
   kosongJudul: "No questions to do yet",
   kosongUlang: (k) => `No wrong answers for Grade ${k}. Well done!`,
@@ -339,12 +341,13 @@ const zh: Kamus = {
   sampulJudul: "像蜜蜂一樣勤勞，數學越學越聰明。",
   sampulIsi: "每答一題就收集分數，就像蜜蜂採蜜一樣。每道題都有一步一步的解說。",
   sampulMulai: "開始練習",
-  sampulPaket: "2025 奧林匹亞試題",
-  sampulStat: (soal, paket) => [`${soal} 道練習題`, `${paket} 道奧林匹亞題`, "1–6 年級", "3 種語言"],
+  sampulPaket: "題組",
+  sampulStat: (soal, paket) => [`${soal} 道練習題`, `${paket} 道題組題目`, "1–6 年級", "3 種語言"],
   sampulGambar: "穿制服的小學生在揮手，身邊有書、鉛筆、火箭和數學符號，還有一隻蜜蜂繞著他飛",
   sampulFoto: "小學生在教室裡上課",
-  paketJudul: "奧林匹亞試題",
-  paketIsi: "從第 1 題開始依序作答的奧林匹亞試題，答案和解說都已重新檢查過。",
+  paketJudul: "題組",
+  paketIsi: "從第 1 題開始依序作答的題組，附解說和圖解。",
+  kategoriPaket: { indonesia: ["印尼奧林匹亞", "OSN/KSN 風格題目，包含 2025 年奧林匹亞試題。"], internasional: ["國際奧林匹亞", "SEAMO、袋鼠數學、SASMO 風格：謎題與推理。"], standar: ["標準題", "配合學校課程的一般練習，不是奧林匹亞題。"] },
   paketKelas: (k) => `${k.join("、")} 年級`,
   paketMulai: "開始作答",
   paketSudah: (a, b) => `已完成 ${a} / ${b} 題`,
@@ -397,7 +400,7 @@ const zh: Kamus = {
   sumberIsi: (tgl) =>
     `這裡的題目都是為練習而編寫的原創題。分類標籤（OSN/KSN、SEAMO、KMNR、OMNAS、KOSSMI、KSM）表示題目參考的競賽風格，並不是這些競賽的正式考題。答案由題目中的數字自動計算，並在加入題庫前經過檢查。每一題都有印尼文、英文和繁體中文版本。奧林匹亞試題來自收集的練習文件，答案都重新算過，原始文件中錯誤的選項已更正並附上說明。題庫更新日期：${tgl}。`,
 
-  modeNama: { latihan: "自由練習", simulasi: "模擬競賽", ulang: "重做錯題", osn: "OSN/KSN 風格", paket: "奧林匹亞試題" },
+  modeNama: { latihan: "自由練習", simulasi: "模擬競賽", ulang: "重做錯題", osn: "OSN/KSN 風格", paket: "題組" },
   menyiapkan: "正在準備題目……",
   kosongJudul: "目前沒有題目",
   kosongUlang: (k) => `${k} 年級沒有錯題，太棒了！`,

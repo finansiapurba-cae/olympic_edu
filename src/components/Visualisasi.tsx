@@ -79,7 +79,7 @@ function Kelompok({ s, tampil }: P) {
         <div className="text-center">
           <div className="flex flex-wrap justify-center gap-1 text-2xl">{Array.from({ length: kepala }, (_, i) => <span key={i}>❔</span>)}</div>
           <p className="mt-2 text-sm font-bold text-redup">
-            {kepala} 🙂 · {total} 🦶
+            {kepala} {s.ikon?.[0] ?? "🙂"} · {total} {s.ikon?.[1] ?? "🦶"}
           </p>
         </div>
       );
@@ -1034,7 +1034,7 @@ function Persen({ s, tampil }: P) {
 
 function Rata({ s, tampil }: P) {
   const data: (number | null)[] = s.data;
-  const maks = 100, min = 50, H = 120;
+  const maks = s.maks ?? 100, min = s.min ?? 50, H = 120;
   const tinggi = (v: number) => Math.max(6, Math.min(H + 16, ((v - min) / (maks - min)) * H));
   const garisRata = s.target ?? s.hasil;
   return (

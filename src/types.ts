@@ -36,8 +36,11 @@ export interface Soal {
   visual?: SpesVisual;
 }
 
+export type KategoriPaket = "indonesia" | "internasional" | "standar";
+
 export interface MetaPaket {
   id: string;
+  kategori: KategoriPaket;
   judul: Teks3;
   deskripsi: Teks3;
   total: number;
