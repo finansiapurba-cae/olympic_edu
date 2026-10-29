@@ -3,7 +3,8 @@ import { akurasi } from "./progres";
 
 // Alamat Web App Google Apps Script yang menulis ke Google Sheet guru (lihat google-sheet/PANDUAN.md).
 // Kosong = hasil tidak dikirim ke mana pun. Bisa juga diisi lewat variabel Netlify VITE_SHEET_URL.
-export const SHEET_URL: string = import.meta.env.VITE_SHEET_URL ?? "";
+export const SHEET_URL: string =
+  import.meta.env.VITE_SHEET_URL ?? "https://script.google.com/macros/s/AKfycbwgYmmtPjj_3qeIFsNR3a1rymHLalGQjTjA9RCsvEVpeaq8EG_BF_xSWuJFAvBaG9Ha/exec";
 
 const KUNCI_PERANGKAT = "kms-perangkat";
 
