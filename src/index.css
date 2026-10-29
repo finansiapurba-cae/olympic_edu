@@ -90,9 +90,6 @@ body {
   45% { transform: translateY(-18px); }
   55% { transform: translateY(-18px); }
 }
-@keyframes kilat-sapuan {
-  to { stroke-dashoffset: -300; }
-}
 .melayang { animation: melayang 4s ease-in-out infinite; }
 .awan { animation: awan 7s ease-in-out infinite alternate; }
 .lambai { transform-box: view-box; transform-origin: 252px 214px; animation: lambai 1.4s ease-in-out infinite; }
@@ -101,9 +98,7 @@ body {
 .bayangan-napas { transform-box: fill-box; transform-origin: center; animation: bayangan-napas 3s ease-in-out infinite; }
 .api-roket { transform-box: fill-box; transform-origin: top; animation: api-roket 0.25s ease-in-out infinite; }
 .bola-pantul { animation: bola-pantul 1.8s ease-in-out infinite; }
-.kilat-sapuan { animation: kilat-sapuan 3s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .melayang, .awan, .lambai, .kedip, .napas, .bayangan-napas, .api-roket, .bola-pantul, .kilat-sapuan { animation: none; }
 }
 
 /* Lebah terbang mengitari murid */

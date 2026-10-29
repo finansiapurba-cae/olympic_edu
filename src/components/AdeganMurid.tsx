@@ -71,10 +71,18 @@ function LebahKecil() {
 export default function AdeganMurid({ label, className }: { label: string; className?: string }) {
   return (
     <svg viewBox="0 0 420 400" className={className} role="img" aria-label={label} overflow="visible">
-      {/* sapuan warna di belakang */}
-      <path d="M 20 340 C 110 300, 230 330, 560 200" fill="none" stroke="#F97316" strokeWidth="26" strokeLinecap="round" opacity=".9" />
-      <path d="M 20 372 C 130 330, 260 360, 560 236" fill="none" stroke="#38BDF8" strokeWidth="22" strokeLinecap="round" opacity=".9" />
-      <path d="M 20 340 C 110 300, 230 330, 560 200" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeDasharray="40 260" className="kilat-sapuan" />
+      <defs>
+        <radialGradient id="cahaya-murid" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity=".85" />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="panggung" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#93C5FD" />
+        </linearGradient>
+      </defs>
+      {/* cahaya lembut di belakang murid */}
+      <circle cx="210" cy="210" r="160" fill="url(#cahaya-murid)" />
 
       <Awan x={40} y={96} s={0.9} tunda={0} />
       <Awan x={318} y={54} s={0.7} tunda={2} />
@@ -127,8 +135,11 @@ export default function AdeganMurid({ label, className }: { label: string; class
       <Chip x={330} y={182} isi="×" warna="#F97316" tunda={0.9} />
       <Chip x={92} y={232} isi="π" warna="#0284C7" tunda={1.5} />
 
-      {/* bayangan */}
-      <ellipse cx="210" cy="384" rx="62" ry="9" fill="#0F172A" opacity=".18" className="bayangan-napas" />
+      {/* panggung bulat tempat murid berdiri */}
+      <ellipse cx="210" cy="388" rx="104" ry="20" fill="#60A5FA" opacity=".35" />
+      <ellipse cx="210" cy="380" rx="100" ry="20" fill="url(#panggung)" stroke="#FFFFFF" strokeWidth="3" />
+      <ellipse cx="210" cy="378" rx="72" ry="12" fill="none" stroke="#FFFFFF" strokeWidth="2" opacity=".8" />
+      <ellipse cx="210" cy="376" rx="54" ry="8" fill="#0F172A" opacity=".16" className="bayangan-napas" />
 
       {/* murid */}
       <g className="napas">
