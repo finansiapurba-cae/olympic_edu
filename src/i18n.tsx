@@ -36,6 +36,9 @@ const id = {
   namaPeserta: "Nama peserta",
   tulisNama: "Tulis namamu",
   pilihBahasa: "Pilih bahasa",
+  visJudul: "Gambar bantu",
+  visPenyelesaian: "Gambar penyelesaian",
+  hariPendek: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
   footer: "Latihan soal bergaya kompetisi dengan pembahasan. Progres tersimpan di perangkat ini.",
 
   eyebrow: "Latihan Kompetisi · SD",
@@ -193,6 +196,9 @@ const en: Kamus = {
   namaPeserta: "Your name",
   tulisNama: "Type your name",
   pilihBahasa: "Choose language",
+  visJudul: "Picture",
+  visPenyelesaian: "Solution picture",
+  hariPendek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   footer: "Competition-style practice with explanations. Progress is saved on this device.",
 
   eyebrow: "Competition Practice · Primary",
@@ -348,6 +354,9 @@ const zh: Kamus = {
   namaPeserta: "姓名",
   tulisNama: "輸入你的名字",
   pilihBahasa: "選擇語言",
+  visJudul: "圖解",
+  visPenyelesaian: "圖解答案",
+  hariPendek: ["日", "一", "二", "三", "四", "五", "六"],
   footer: "附解說的競賽風格練習題。進度儲存在這台裝置上。",
 
   eyebrow: "競賽練習 · 小學",

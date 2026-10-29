@@ -5,6 +5,24 @@ import path from "node:path";
 import katex from "katex";
 import { buildKelas, LANGS, rapikanRumus, PENUTUP } from "./soal/lib.mjs";
 import DAFTAR_PAKET from "./paket/paket-2025.mjs";
+import VISUAL_PAKET from "./paket/visual-2025.mjs";
+
+// Jenis gambar bantu yang dikenal komponen src/components/Visualisasi.tsx.
+const JENIS_VISUAL = [...fs.readFileSync("src/components/Visualisasi.tsx", "utf8").match(/const RENDER.*?> = \{([^}]*)\}/s)[1].matchAll(/(\w+):/g)].map((m) => m[1]);
+// Rumus di dalam label gambar dirapikan dan diperiksa seperti teks soal.
+function rapikanVisual(v) {
+  if (typeof v === "string") return v.includes("$") ? rapikanRumus(v) : v;
+  if (Array.isArray(v)) return v.map(rapikanVisual);
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, rapikanVisual(x)]));
+  return v;
+}
+function cekVisual(id, v) {
+  if (!v || typeof v !== "object") return errors.push(`${id}: tanpa gambar bantu`);
+  JSON.stringify(v).match(/"[^"]*\$[^"]*"/g)?.forEach((x) => cekTeks(`${id}/gambar`, JSON.parse(x)));
+  if (!JENIS_VISUAL.includes(v.j)) errors.push(`${id}: jenis gambar "${v.j}" tidak dikenal`);
+  const js = JSON.stringify(v);
+  if (/null,"|NaN|undefined|Infinity/.test(js.replace(/\[null|,null/g, ""))) errors.push(`${id}: gambar rusak ${js}`);
+}
 
 const OUT = path.resolve("src/data/bank");
 const MIN_PER_KELAS = 50;
@@ -47,6 +65,10 @@ for (let k = 1; k <= 6; k++) {
     }
   }
   for (const q of qs) {
+    q.visual = rapikanVisual(q.visual);
+    for (const L of LANGS) if (q.teks[L].visual) q.teks[L].visual = rapikanVisual(q.teks[L].visual);
+    cekVisual(q.id, q.visual);
+    for (const L of LANGS) if (q.teks[L].visual) cekVisual(`${q.id}/${L}`, q.teks[L].visual);
     if (!["A", "B", "C", "D"].includes(q.kunci)) errors.push(`${q.id}: kunci tidak valid`);
     if (!["mudah", "sedang", "sulit"].includes(q.tingkat)) errors.push(`${q.id}: tingkat tidak valid`);
   }
@@ -66,6 +88,8 @@ const HURUF = ["A", "B", "C", "D"];
 const paketOut = [];
 const semuaTeks = new Map(all.map((q) => [q.teks.id.pertanyaan.replace(/\s+/g, " ").toLowerCase(), q.id]));
 for (const p of DAFTAR_PAKET) {
+  const vis = VISUAL_PAKET[p.id] ?? [];
+  if (vis.length !== p.soal.length) errors.push(`${p.id}: ${vis.length} gambar untuk ${p.soal.length} soal`);
   const soal = p.soal.map((s, i) => {
     const id = `${p.id}-${String(i + 1).padStart(2, "0")}`;
     if (!HURUF.includes(s.kunci)) errors.push(`${id}: kunci tidak valid`);
@@ -81,8 +105,14 @@ for (const p of DAFTAR_PAKET) {
     const kunciTeks = s.teks.id[0].replace(/\s+/g, " ").toLowerCase();
     if (semuaTeks.has(kunciTeks)) errors.push(`${id}: sama dengan soal ${semuaTeks.get(kunciTeks)}`);
     semuaTeks.set(kunciTeks, id);
+    const visual = rapikanVisual(vis[i]?.("id"));
+    cekVisual(id, visual);
+    for (const L of LANGS) {
+      const vL = rapikanVisual(vis[i]?.(L));
+      if (teks[L] && JSON.stringify(vL) !== JSON.stringify(visual)) teks[L].visual = vL;
+    }
     return {
-      id, kelas: s.kelas, kategori: "Olimpiade", paket: p.id,
+      id, kelas: s.kelas, kategori: "Olimpiade", paket: p.id, visual,
       topik: { id: s.topik[0], en: s.topik[1], zh: s.topik[2] },
       tingkat: s.tingkat, kunci: s.kunci, teks,
       ...(s.koreksi ? { koreksi: { id: rapikanRumus(s.koreksi[0]), en: rapikanRumus(s.koreksi[1]), zh: rapikanRumus(s.koreksi[2]) } } : {}),

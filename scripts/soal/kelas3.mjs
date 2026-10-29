@@ -12,6 +12,7 @@ export default [
       jawaban: p * l,
       satuan: "cm²",
       salah: [2 * (p + l), p + l, p * l + p],
+      visual: { j: "pp", p, l, satuan: "cm", ukur: "luas", grid: true, hasil: `${p} × ${l} = ${p * l}` },
       pembahasan: [
         t(`Luas persegi panjang = panjang × lebar.`, `Area of a rectangle = length × width.`, `長方形面積 = 長 × 寬。`),
         `$${p} \\times ${l} = ${p * l}$ cm²`,
@@ -29,6 +30,7 @@ export default [
       jawaban: 2 * (p + l),
       satuan: "m",
       salah: [p * l, p + l, 2 * p + l],
+      visual: { j: "pp", p, l, satuan: "m", ukur: "keliling", hasil: `2 × (${p} + ${l}) = ${2 * (p + l)}` },
       pembahasan: [
         t(`Keliling persegi panjang = 2 × (panjang + lebar).`, `Perimeter of a rectangle = 2 × (length + width).`, `長方形周長 = 2 × (長 + 寬)。`),
         `$2 \\times (${p} + ${l}) = 2 \\times ${p + l} = ${2 * (p + l)}$ m`,
@@ -43,6 +45,7 @@ export default [
       pertanyaan: t(`Hasil dari $${fr(num, d)}$ dari ${n} adalah ...`, `What is $${fr(num, d)}$ of ${n}?`, `${n} 的 $${fr(num, d)}$ 是多少？`),
       jawaban: ans,
       salah: [satu, n - ans, ans + num, n * num],
+      visual: { j: "model", total: n, bagian: Array.from({ length: d }, (_, i) => ({ nilai: 1, label: i < num ? "?" : satu })), jawab: satu, hasil: ans },
       pembahasan: [
         t(`Bagi ${n} menjadi ${d} bagian sama besar: $${n} : ${d} = ${satu}$.`, `Split ${n} into ${d} equal parts: $${n} \\div ${d} = ${satu}$.`, `把 ${n} 平分成 ${d} 份：$${n} \\div ${d} = ${satu}$。`),
         t(`Ambil ${num} bagian: $${num} \\times ${satu} = ${ans}$.`, `Take ${num} of the parts: $${num} \\times ${satu} = ${ans}$.`, `取其中 ${num} 份：$${num} \\times ${satu} = ${ans}$。`),
@@ -58,6 +61,7 @@ export default [
         pertanyaan: t(`Di antara pecahan ${daftar}, manakah yang paling besar?`, `Which is the largest of the fractions ${daftar}?`, `${daftar.replaceAll("$, $", "$、$")} 之中，哪一個最大？`),
         jawaban: `$${fr(1, mn)}$`,
         salah: ds.filter((d) => d !== mn).map((d) => `$${fr(1, d)}$`),
+        visual: { j: "pecahan", bar: ds.map((x) => ({ a: 1, b: x })), sorot: ds.indexOf(mn) },
         pembahasan: [
           t(`Semua pecahan pembilangnya 1. Bayangkan satu kue dibagi menjadi beberapa potong.`, `All the fractions have numerator 1. Imagine one cake cut into pieces.`, `這些分數的分子都是 1。想像把一個蛋糕切成幾塊。`),
           t(`Semakin sedikit potongannya (penyebut kecil), semakin besar setiap potongnya.`, `The fewer the pieces (smaller denominator), the bigger each piece.`, `切的塊數越少（分母越小），每一塊就越大。`),
@@ -71,6 +75,7 @@ export default [
       pertanyaan: t(`Di antara pecahan ${daftar}, manakah yang paling besar?`, `Which is the largest of the fractions ${daftar}?`, `${daftar.replaceAll("$, $", "$、$")} 之中，哪一個最大？`),
       jawaban: `$${fr(mx, d)}$`,
       salah: ns.filter((n) => n !== mx).map((n) => `$${fr(n, d)}$`),
+      visual: { j: "pecahan", bar: ns.map((x) => ({ a: x, b: d })), sorot: ns.indexOf(mx) },
       pembahasan: [
         t(`Semua pecahan penyebutnya sama, yaitu ${d}.`, `All the fractions have the same denominator, ${d}.`, `這些分數的分母都是 ${d}。`),
         t(`Jika penyebutnya sama, pecahan dengan pembilang terbesar adalah yang paling besar: $${fr(mx, d)}$.`, `With the same denominator, the fraction with the largest numerator is the largest: $${fr(mx, d)}$.`, `分母相同時，分子最大的分數最大：$${fr(mx, d)}$。`),
@@ -84,6 +89,7 @@ export default [
       pertanyaan: t(`Hasil dari $${fr(a, d)} + ${fr(b, d)}$ adalah ...`, `What is $${fr(a, d)} + ${fr(b, d)}$?`, `$${fr(a, d)} + ${fr(b, d)} = ?$`),
       jawaban: frac(s, d),
       salah: [`$${fr(s, 2 * d)}$`, `$${fr(s + 1, d)}$`, a === b ? `$${fr(s, d + d)}$` : `$${fr(Math.abs(a - b), d)}$`, `$${fr(s + 2, d)}$`].filter((x) => x !== frac(s, d)),
+      visual: { j: "pecahan", bar: [{ a, b: d }, { a: b, b: d }], op: "+", hasil: { a: s, b: d } },
       pembahasan: [
         t(`Penyebutnya sama (${d}), jadi cukup jumlahkan pembilangnya. Penyebut tidak dijumlahkan.`, `The denominators are the same (${d}), so just add the numerators. Do not add the denominators.`, `分母相同（${d}），只要把分子相加，分母不相加。`),
         `$${fr(a, d)} + ${fr(b, d)} = ${fr(s, d)}$`,
@@ -100,6 +106,7 @@ export default [
       jawaban: 1000 * k + g,
       satuan: "g",
       salah: [100 * k + g, k + g, 1000 * k + g + 100, 10 * k + g],
+      visual: { j: "model", total: "?", bagian: [...Array.from({ length: k }, () => ({ nilai: 1000, label: "1000" })), { nilai: g, label: g }], jawab: fmt(1000 * k + g) },
       pembahasan: [
         t(`1 kg = ${fmt(1000)} gram, jadi ${k} kg $= ${fmt(1000 * k)}$ gram.`, `1 kg = ${fmt(1000)} g, so ${k} kg $= ${fmt(1000 * k)}$ g.`, `1 公斤 = ${fmt(1000)} 公克，所以 ${k} 公斤 $= ${fmt(1000 * k)}$ 公克。`),
         `$${fmt(1000 * k)} + ${g} = ${fmt(1000 * k + g)}$ g`,
@@ -112,6 +119,7 @@ export default [
       pertanyaan: t(`Perhatikan pola: ${seq.join(", ")}, ... Bilangan berikutnya adalah ...`, `Look at the pattern: ${seq.join(", ")}, ... What is the next number?`, `觀察規律：${seq.join("、")}、……下一個數是多少？`),
       jawaban: ans,
       salah: [seq[3] + (seq[3] - seq[2]), ans + 1, (s + 4) * 2, ans - 2],
+      visual: { j: "titik", suku: [0, 1, 2, 3].map((i) => s + i), tanya: s + 4, jawab: ans },
       pembahasan: [
         t(`Setiap bilangan adalah hasil kali bilangan dengan dirinya sendiri:`, `Each number is a number multiplied by itself:`, `每個數都是某個數乘以自己：`) + ` $${seq.map((v, i) => `${v} = ${s + i} \\times ${s + i}`).join(",\\ ")}$`,
         t(`Bilangan berikutnya: $${s + 4} \\times ${s + 4} = ${ans}$.`, `Next number: $${s + 4} \\times ${s + 4} = ${ans}$.`, `下一個數：$${s + 4} \\times ${s + 4} = ${ans}$。`),
@@ -124,6 +132,7 @@ export default [
       pertanyaan: t(`Berapa banyak bilangan dari 1 sampai ${n} yang habis dibagi ${d}?`, `How many numbers from 1 to ${n} are divisible by ${d}?`, `從 1 到 ${n}，有幾個數能被 ${d} 整除？`),
       jawaban: ans,
       salah: [ans + 1, ans - 1, ans + 2],
+      visual: { j: "grid", dari: 1, sampai: n, sorot: Array.from({ length: ans }, (_, i) => (i + 1) * d) },
       pembahasan: [
         t(`Bilangan yang habis dibagi ${d} adalah kelipatan ${d}: ${d}, ${2 * d}, ${3 * d}, ...`, `Numbers divisible by ${d} are the multiples of ${d}: ${d}, ${2 * d}, ${3 * d}, ...`, `能被 ${d} 整除的數就是 ${d} 的倍數：${d}、${2 * d}、${3 * d}、……`),
         t(`Kelipatan ${d} terbesar yang tidak lebih dari ${n} adalah $${d} \\times ${ans} = ${d * ans}$.`, `The largest multiple of ${d} that is not more than ${n} is $${d} \\times ${ans} = ${d * ans}$.`, `不超過 ${n} 的最大 ${d} 的倍數是 $${d} \\times ${ans} = ${d * ans}$。`),
@@ -138,6 +147,7 @@ export default [
       jawaban: s,
       salah: [s + 1, s - 1, q, d - s],
       maks: d - 1,
+      visual: { j: "kelompok", grup: [{ n: d, e: "🧺", isi: q, titik: "●" }], sisa: s, sembunyi: true, hasil: s },
       pembahasan: [
         t(`Cari kelipatan ${d} terbesar yang tidak lebih dari ${n}: $${d} \\times ${q} = ${d * q}$.`, `Find the largest multiple of ${d} that is not more than ${n}: $${d} \\times ${q} = ${d * q}$.`, `找出不超過 ${n} 的最大 ${d} 的倍數：$${d} \\times ${q} = ${d * q}$。`),
         t(`Sisa: $${n} - ${d * q} = ${s}$.`, `Remainder: $${n} - ${d * q} = ${s}$.`, `餘數：$${n} - ${d * q} = ${s}$。`),
@@ -157,6 +167,7 @@ export default [
       langkah: 500,
       jawaban: p - total,
       salah: [p - h, total, p - total - h],
+      visual: { j: "model", total: fmt(p), bagian: [...Array.from({ length: a }, () => ({ nilai: h, label: fmt(h) })), { nilai: p - total, label: "?" }], jawab: fmt(p - total) },
       pembahasan: [
         t(`Harga seluruhnya: $${a} \\times ${fmt(h)} = ${fmt(total)}$.`, `Total price: $${a} \\times ${fmt(h)} = ${fmt(total)}$.`, `總價：$${a} \\times ${fmt(h)} = ${fmt(total)}$。`),
         t(`Kembalian: $${fmt(p)} - ${fmt(total)} = ${fmt(p - total)}$.`, `Change: $${fmt(p)} - ${fmt(total)} = ${fmt(p - total)}$.`, `找回：$${fmt(p)} - ${fmt(total)} = ${fmt(p - total)}$。`),
@@ -175,6 +186,7 @@ export default [
       ),
       jawaban: pukul(h + 1, tot - 60),
       salah: [t(`pukul ${String(h).padStart(2, "0")}.${tot}`, `${String(h).padStart(2, "0")}:${tot}`, `${String(h).padStart(2, "0")}:${tot}`), pukul(h + 1, tot - 50 >= 60 ? 55 : tot - 50), tot - 70 >= 0 ? pukul(h + 1, tot - 70) : pukul(h, tot - 10)],
+      visual: { j: "jam", waktu: [[h, mm], [h + 1, tot - 60]], tanya: 1, durasi: dur },
       pembahasan: [
         t(`$${mm} + ${dur} = ${tot}$ menit.`, `$${mm} + ${dur} = ${tot}$ minutes.`, `$${mm} + ${dur} = ${tot}$ 分鐘。`),
         t(`${tot} menit = 1 jam ${tot - 60} menit. Jadi jamnya maju 1 menjadi ${h + 1} dan menitnya ${tot - 60}.`, `${tot} minutes = 1 hour ${tot - 60} minutes, so the hour moves up to ${h + 1} and the minutes are ${tot - 60}.`, `${tot} 分鐘 = 1 小時 ${tot - 60} 分鐘，所以變成 ${h + 1} 點 ${tot - 60} 分。`),
@@ -193,6 +205,7 @@ export default [
       ),
       jawaban: ans,
       salah: [n * (n - 1), n * n, ans + n],
+      visual: { j: "jabat", n, hasil: ans },
       pembahasan: [
         t(`Anak pertama berjabat tangan dengan ${n - 1} anak lain.`, `The first child shakes hands with ${n - 1} other children.`, `第一個人和其他 ${n - 1} 個人握手。`),
         t(`Anak kedua tinggal berjabat tangan dengan ${n - 2} anak yang belum, dan seterusnya.`, `The second child only needs ${n - 2} new handshakes, and so on.`, `第二個人只要再和 ${n - 2} 個人握手，依此類推。`),
@@ -211,6 +224,7 @@ export default [
       jawaban: y + d,
       satuan: t("tahun", "years", "歲"),
       salah: [y, S - d, y + d + 1],
+      visual: { j: "banding", baris: [{ label: t("Kakak", "Older", "哥哥"), nilai: y + d, tanya: true }, { label: t("Adik", "Younger", "弟弟"), nilai: y, tanya: true }], selisih: d, total: S },
       pembahasan: [
         t(`Kurangi dulu kelebihan umur kakak: $${S} - ${d} = ${2 * y}$. Ini sama dengan dua kali umur adik.`, `First take away the extra years: $${S} - ${d} = ${2 * y}$. This is twice the younger sibling's age.`, `先減去多出來的歲數：$${S} - ${d} = ${2 * y}$，這是弟弟年齡的 2 倍。`),
         t(`Umur adik $= ${2 * y} : 2 = ${y}$ tahun.`, `Younger sibling: $${2 * y} \\div 2 = ${y}$ years.`, `弟弟：$${2 * y} \\div 2 = ${y}$ 歲。`),
@@ -229,6 +243,7 @@ export default [
       ),
       jawaban: ans,
       salah: [n * n, ans - 1, n * n + 1, ans + n],
+      visual: { j: "catur", n, hasil: ans },
       pembahasan: [
         ...parts.map((v, i) => t(`Persegi ukuran ${i + 1} × ${i + 1}: ada $${n - i} \\times ${n - i} = ${v}$.`, `${i + 1} × ${i + 1} squares: $${n - i} \\times ${n - i} = ${v}$.`, `${i + 1} × ${i + 1} 的正方形：$${n - i} \\times ${n - i} = ${v}$ 個。`)),
         t(`Jumlah seluruhnya: $${parts.join(" + ")} = ${ans}$.`, `Total: $${parts.join(" + ")} = ${ans}$.`, `總共：$${parts.join(" + ")} = ${ans}$。`),
@@ -241,6 +256,7 @@ export default [
       pertanyaan: t(`Hari ini hari ${hari[i]}. ${n} hari lagi adalah hari ...`, `Today is ${hari[i]}. What day will it be in ${n} days?`, `今天是${hari[i]}。再過 ${n} 天是星期幾？`),
       jawaban: hari[(i + n) % 7],
       salah: [hari[(i + n + 1) % 7], hari[(i + n + 6) % 7], hari[(i + q) % 7], hari[(i + n + 2) % 7]],
+      visual: { j: "kalender", mulai: i, maju: n },
       pembahasan: [
         t(`Setiap 7 hari, harinya kembali sama.`, `Every 7 days, the day of the week repeats.`, `每 7 天星期就會重複。`),
         t(`$${n} : 7 = ${q}$ sisa ${s}.`, `$${n} \\div 7 = ${q}$ remainder ${s}.`, `$${n} \\div 7 = ${q}$ 餘 ${s}。`),
@@ -257,6 +273,7 @@ export default [
       jawaban: ans,
       salah: [(ua + ub) % 10, ua, ub, (ans + 1) % 10],
       maks: 9,
+      visual: { j: "satuan", a, b, jawab: ans },
       pembahasan: [
         t(`Angka satuan hasil kali hanya ditentukan oleh angka satuan kedua bilangan, yaitu ${ua} dan ${ub}.`, `The ones digit of a product depends only on the ones digits of the two numbers: ${ua} and ${ub}.`, `乘積的個位數字只由兩個數的個位數字決定：${ua} 和 ${ub}。`),
         t(`$${ua} \\times ${ub} = ${ua * ub}$, angka satuannya ${ans}.`, `$${ua} \\times ${ub} = ${ua * ub}$, whose ones digit is ${ans}.`, `$${ua} \\times ${ub} = ${ua * ub}$，個位數字是 ${ans}。`),
@@ -273,6 +290,7 @@ export default [
       ),
       jawaban: ans,
       salah: [n, 2 * n, ans - 2, ans + 9],
+      visual: { j: "grid", dari: 1, sampai: n, warnaDigit: true },
       pembahasan: [
         t(`Bilangan 1 sampai 9 masing-masing terdiri dari 1 angka: 9 angka.`, `The numbers 1 to 9 have 1 digit each: 9 digits.`, `1 到 9 每個數 1 個數字：共 9 個。`),
         t(`Bilangan 10 sampai ${n} ada $${n} - 9 = ${n - 9}$ bilangan, masing-masing 2 angka: $${n - 9} \\times 2 = ${2 * (n - 9)}$ angka.`, `There are $${n} - 9 = ${n - 9}$ numbers from 10 to ${n}, with 2 digits each: $${n - 9} \\times 2 = ${2 * (n - 9)}$ digits.`, `10 到 ${n} 共有 $${n} - 9 = ${n - 9}$ 個數，每個 2 個數字：$${n - 9} \\times 2 = ${2 * (n - 9)}$ 個。`),
@@ -292,6 +310,7 @@ export default [
       jawaban: total - per * h,
       satuan: "kg",
       salah: [per * h, total - per, total - per * h + per],
+      visual: { j: "model", total, bagian: [...Array.from({ length: h }, () => ({ nilai: per, label: per })), { nilai: total - per * h, label: "?" }], jawab: total - per * h },
       pembahasan: [
         t(`Mangga terjual: $${per} \\times ${h} = ${per * h}$ kg.`, `Mangoes sold: $${per} \\times ${h} = ${per * h}$ kg.`, `賣出：$${per} \\times ${h} = ${per * h}$ 公斤。`),
         t(`Sisa: $${total} - ${per * h} = ${total - per * h}$ kg.`, `Left: $${total} - ${per * h} = ${total - per * h}$ kg.`, `剩下：$${total} - ${per * h} = ${total - per * h}$ 公斤。`),
@@ -308,6 +327,7 @@ export default [
       ),
       jawaban: m + 1,
       salah: [m, m - 1, m + 2],
+      visual: { j: "model", total: S, bagian: [{ nilai: m - 1, label: "?" }, { nilai: m, label: "?" }, { nilai: m + 1, label: "?" }], jawabList: [m - 1, m, m + 1], hasil: m + 1 },
       pembahasan: [
         t(`Bilangan yang di tengah $= ${S} : 3 = ${m}$.`, `The middle number $= ${S} \\div 3 = ${m}$.`, `中間的數 $= ${S} \\div 3 = ${m}$。`),
         t(`Ketiga bilangan itu: ${m - 1}, ${m}, ${m + 1}.`, `The three numbers are ${m - 1}, ${m}, ${m + 1}.`, `三個數是 ${m - 1}、${m}、${m + 1}。`),
@@ -322,6 +342,7 @@ export default [
       pertanyaan: t(`Hasil dari $${a} \\times ${b}$ adalah ...`, `What is $${a} \\times ${b}$?`, `$${a} \\times ${b} = ?$`),
       jawaban: a * b,
       salah: [a * b + 10, a * b - b, a * (b + 1), tt * b + o],
+      visual: { j: "areaKali", a, b },
       pembahasan: [
         t(`Pisahkan ${a} menjadi $${tt} + ${o}$.`, `Split ${a} into $${tt} + ${o}$.`, `把 ${a} 拆成 $${tt} + ${o}$。`),
         `$${tt} \\times ${b} = ${tt * b}$, $${o} \\times ${b} = ${o * b}$`,

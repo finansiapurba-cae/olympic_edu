@@ -1,4 +1,4 @@
-import { T, KAT, NAMA } from "./lib.mjs";
+import { T, KAT, NAMA, EMOJI } from "./lib.mjs";
 
 const ALAT = [
   ["pensil", "pencils", "枝", "鉛筆"],
@@ -18,6 +18,7 @@ export default [
       ),
       jawaban: k * b,
       salah: [k + b, k * b + k, k * b - b],
+      visual: { j: "kelompok", grup: [{ n: k, e: "📦", isi: b, titik: EMOJI[ai] }], hasil: k * b },
       pembahasan: [
         t(`Ini sama dengan menjumlahkan ${b} sebanyak ${k} kali.`, `This is the same as adding ${b} a total of ${k} times.`, `這就是把 ${b} 連加 ${k} 次。`),
         `$${k} \\times ${b} = ${k * b}$`,
@@ -35,6 +36,7 @@ export default [
       jawaban: q,
       satuan: t("apel", "apples", "個"),
       salah: [total - b, q + 1, q - 1, b],
+      visual: { j: "kelompok", grup: [{ n: b, e: "🧒", isi: q, titik: "🍎" }], sembunyi: true, hasil: q },
       pembahasan: [
         t(`Dibagi sama banyak berarti pembagian: $${total} : ${b} = ${q}$.`, `Sharing equally means dividing: $${total} \\div ${b} = ${q}$.`, `平分就是用除法：$${total} \\div ${b} = ${q}$。`),
         t(`Cek: $${b} \\times ${q} = ${total}$.`, `Check: $${b} \\times ${q} = ${total}$.`, `驗算：$${b} \\times ${q} = ${total}$。`),
@@ -50,6 +52,7 @@ export default [
       pertanyaan: t(`Nilai angka ${d} pada bilangan ${n} adalah ...`, `What is the value of the digit ${d} in the number ${n}?`, `在 ${n} 這個數中，數字 ${d} 代表多少？`),
       jawaban: d * place,
       salah: [d, d * 10, d * 100, n].filter((v) => v !== d * place),
+      visual: { j: "nilaiTempat", angka: n, sorot: pos },
       pembahasan: [
         t(`Pada bilangan ${n}, angka ${d} berada di tempat ${nama}.`, `In ${n}, the digit ${d} is in the ${nama} place.`, `在 ${n} 中，${d} 在${nama}。`),
         t(`Nilainya $${d} \\times ${place} = ${d * place}$.`, `Its value is $${d} \\times ${place} = ${d * place}$.`, `它代表 $${d} \\times ${place} = ${d * place}$。`),
@@ -63,6 +66,7 @@ export default [
       pertanyaan: t(`Perhatikan pola: ${seq.join(", ")}, ... Bilangan berikutnya adalah ...`, `Look at the pattern: ${seq.join(", ")}, ... What is the next number?`, `觀察規律：${seq.join("、")}、……下一個數是多少？`),
       jawaban: ans,
       salah: [seq[3] + (seq[3] - seq[2]), seq[3] + m, ans + 1],
+      visual: { j: "pola", suku: seq, beda: `×${m}`, jawab: ans },
       pembahasan: [
         `$${seq[1]} = ${seq[0]} \\times ${m}$, $${seq[2]} = ${seq[1]} \\times ${m}$`,
         t(`Setiap bilangan dikali ${m} untuk mendapatkan bilangan berikutnya.`, `Each number is multiplied by ${m} to get the next one.`, `每個數乘以 ${m} 就得到下一個數。`),
@@ -82,6 +86,7 @@ export default [
       langkah: 500,
       jawaban: p - h,
       salah: [p - h - 500, p - h + 500, p - h + 1000],
+      visual: { j: "model", total: fmt(p), bagian: [{ nilai: h, label: fmt(h) }, { nilai: p - h, label: "?" }], jawab: fmt(p - h) },
       pembahasan: [
         t(`Kembalian = uang yang dibayarkan − harga roti.`, `Change = money paid − price of the bread.`, `找回的錢 = 付的錢 − 麵包的價錢。`),
         `$${fmt(p)} - ${fmt(h)} = ${fmt(p - h)}$`,
@@ -103,6 +108,7 @@ export default [
       satuan: t("menit", "minutes", "分鐘"),
       langkah: 5,
       salah: [salahDesimal, dur - 5, dur + 10],
+      visual: { j: "jam", waktu: [[h, mm], [h + 1, em]], durasi: dur },
       pembahasan: [
         t(`Dari pukul ${jam(h, mm)} sampai pukul ${jam(h + 1, 0)} ada $60 - ${mm} = ${60 - mm}$ menit.`, `From ${jam(h, mm)} to ${jam(h + 1, 0)} is $60 - ${mm} = ${60 - mm}$ minutes.`, `從 ${jam(h, mm)} 到 ${jam(h + 1, 0)} 是 $60 - ${mm} = ${60 - mm}$ 分鐘。`),
         t(`Dari pukul ${jam(h + 1, 0)} sampai pukul ${jam(h + 1, em)} ada ${em} menit.`, `From ${jam(h + 1, 0)} to ${jam(h + 1, em)} is ${em} minutes.`, `從 ${jam(h + 1, 0)} 到 ${jam(h + 1, em)} 是 ${em} 分鐘。`),
@@ -117,6 +123,7 @@ export default [
       jawaban: 100 * m + c,
       satuan: "cm",
       salah: [m + c, 10 * m + c, 1000 * m + c],
+      visual: { j: "model", total: "?", bagian: [...Array.from({ length: m }, () => ({ nilai: 100, label: "100" })), { nilai: c, label: c }], jawab: 100 * m + c },
       pembahasan: [
         t(`1 meter = 100 cm, jadi ${m} meter $= ${m} \\times 100 = ${m * 100}$ cm.`, `1 m = 100 cm, so ${m} m $= ${m} \\times 100 = ${m * 100}$ cm.`, `1 公尺 = 100 公分，所以 ${m} 公尺 $= ${m} \\times 100 = ${m * 100}$ 公分。`),
         `$${m * 100} + ${c} = ${100 * m + c}$ cm`,
@@ -134,6 +141,7 @@ export default [
       jawaban: g,
       satuan: t("ekor", "goats", "隻"),
       salah: [a, h, g + 1, g - 1],
+      visual: { j: "kelompok", grup: [{ n: a, e: "🐔", isi: 2 }, { n: g, e: "🐐", isi: 4 }], sembunyi: true, hasil: g },
       pembahasan: [
         t(`Misalkan semua hewan adalah ayam (berkaki 2). Jumlah kakinya $${h} \\times 2 = ${2 * h}$.`, `Pretend all the animals are chickens (2 legs). That gives $${h} \\times 2 = ${2 * h}$ legs.`, `假設全部都是雞（2 隻腳），腳有 $${h} \\times 2 = ${2 * h}$ 隻。`),
         t(`Kaki yang masih kurang: $${k} - ${2 * h} = ${2 * g}$.`, `Legs still missing: $${k} - ${2 * h} = ${2 * g}$.`, `還少了 $${k} - ${2 * h} = ${2 * g}$ 隻腳。`),
@@ -156,6 +164,7 @@ export default [
       ),
       jawaban: ans,
       salah: [besar ? num(asc) : num(desc), num(ds), besar ? num([desc[0], desc[2], desc[1]]) : num([asc[0], asc[2], asc[1]])],
+      visual: { j: "kartu", angka: ds, jawab: ans },
       pembahasan: besar
         ? [
             t(`Agar terbesar, letakkan angka terbesar di ratusan, lalu yang berikutnya di puluhan.`, `For the largest number, put the biggest digit in the hundreds place, then the next biggest in the tens place.`, `要最大，把最大的數字放在百位，第二大的放在十位。`),
@@ -173,6 +182,7 @@ export default [
       pertanyaan: t(`Hasil dari $1 + 2 + 3 + \\cdots + ${n}$ adalah ...`, `What is $1 + 2 + 3 + \\cdots + ${n}$?`, `$1 + 2 + 3 + \\cdots + ${n} = ?$`),
       jawaban: ans,
       salah: [(n * n) / 2, ans - n, n * (n + 1)],
+      visual: { j: "pasangan", suku: Array.from({ length: n }, (_, i) => i + 1), jawab: ans },
       pembahasan: [
         t(`Pasangkan bilangan pertama dengan terakhir: $1 + ${n} = ${n + 1}$, $2 + ${n - 1} = ${n + 1}$, dan seterusnya.`, `Pair the first number with the last: $1 + ${n} = ${n + 1}$, $2 + ${n - 1} = ${n + 1}$, and so on.`, `頭尾配對：$1 + ${n} = ${n + 1}$，$2 + ${n - 1} = ${n + 1}$，依此類推。`),
         t(`Ada $${n} : 2 = ${n / 2}$ pasangan, dan setiap pasangan berjumlah ${n + 1}.`, `There are $${n} \\div 2 = ${n / 2}$ pairs, and each pair adds up to ${n + 1}.`, `共有 $${n} \\div 2 = ${n / 2}$ 對，每對的和都是 ${n + 1}。`),
@@ -189,6 +199,7 @@ export default [
       pertanyaan: t(`${nm} dari ${n} adalah ...`, `What is ${per4 ? "one quarter" : "half"} of ${n}?`, `${n} 的${nm}是多少？`),
       jawaban: ans,
       salah: [per4 ? n / 2 : n / 4, ans + 2, n - ans, n * d],
+      visual: { j: "kelompok", grup: [{ n: d, e: "🧺", isi: ans, titik: "●" }], sembunyi: true, hasil: ans },
       pembahasan: [
         t(`${nm} berarti dibagi menjadi ${d} bagian sama besar.`, `${nm} means dividing into ${d} equal parts.`, `${nm}就是平分成 ${d} 份。`),
         t(`$${n} : ${d} = ${ans}$`, `$${n} \\div ${d} = ${ans}$`, `$${n} \\div ${d} = ${ans}$`),
@@ -206,6 +217,7 @@ export default [
       jawaban: a - b,
       satuan: t("tahun", "years", "歲"),
       salah: [a - b + tt, a - b - tt, a + b],
+      visual: { j: "banding", baris: [{ label: t("Ayah", "Father", "爸爸"), nilai: a }, { label: n, nilai: b }], selisih: "?", jawab: a - b, tambah: tt },
       pembahasan: [
         t(`Setiap tahun, umur ayah dan umur ${n} sama-sama bertambah 1 tahun.`, `Every year, both Dad and ${n} get 1 year older.`, `每過一年，爸爸和 ${n} 都各長 1 歲。`),
         t(`Karena itu, selisih umur mereka tidak pernah berubah.`, `So the difference in their ages never changes.`, `所以他們的年齡差永遠不變。`),
@@ -223,6 +235,7 @@ export default [
       ),
       jawaban: b,
       salah: [c - a, b + 1, b - 1, a],
+      visual: { j: "bagian", baris: [{ label: `${a} ×`, n: a }], nilai: b, total: c },
       pembahasan: [
         t(`Cari bilangan yang jika dikali ${a} hasilnya ${c}.`, `Find the number that gives ${c} when multiplied by ${a}.`, `找出乘以 ${a} 會等於 ${c} 的數。`),
         t(`$${c} : ${a} = ${b}$, karena $${a} \\times ${b} = ${c}$.`, `$${c} \\div ${a} = ${b}$, because $${a} \\times ${b} = ${c}$.`, `$${c} \\div ${a} = ${b}$，因為 $${a} \\times ${b} = ${c}$。`),
@@ -241,6 +254,7 @@ export default [
       jawaban: total - d * h,
       satuan: t("halaman", "pages", "頁"),
       salah: [d * h, total - d, total - d * h - d],
+      visual: { j: "model", total, bagian: [...Array.from({ length: h }, () => ({ nilai: d, label: d })), { nilai: total - d * h, label: "?" }], jawab: total - d * h },
       pembahasan: [
         t(`Halaman yang sudah dibaca: $${d} \\times ${h} = ${d * h}$.`, `Pages already read: $${d} \\times ${h} = ${d * h}$.`, `已經讀了：$${d} \\times ${h} = ${d * h}$ 頁。`),
         t(`Halaman yang belum dibaca: $${total} - ${d * h} = ${total - d * h}$.`, `Pages not read yet: $${total} - ${d * h} = ${total - d * h}$.`, `還沒讀：$${total} - ${d * h} = ${total - d * h}$ 頁。`),
@@ -258,6 +272,7 @@ export default [
       jawaban: k + 1,
       satuan: t("tiang", "flagpoles", "根"),
       salah: [k, k + 2, k - 1],
+      visual: { j: "tiang", celah: k, jarak: d },
       pembahasan: [
         t(`Jalan dibagi menjadi $${L} : ${d} = ${k}$ jarak (celah).`, `The road is split into $${L} \\div ${d} = ${k}$ gaps.`, `整條路分成 $${L} \\div ${d} = ${k}$ 段間隔。`),
         t(`Tiang selalu 1 lebih banyak daripada celah karena kedua ujung dipasang tiang.`, `There is always 1 more pole than gaps, because both ends have a pole.`, `兩端都插的時候，旗桿數比間隔數多 1。`),
@@ -273,6 +288,7 @@ export default [
       pertanyaan: t(`Bilangan ${n} jika dibulatkan ke puluhan terdekat menjadi ...`, `Round ${n} to the nearest ten.`, `把 ${n} 四捨五入到十位是多少？`),
       jawaban: ans,
       salah: [fl, fl + 10, fl + 20, n],
+      visual: { j: "garis", min: fl, max: fl + 10, titik: [n], tanya: ans, tanyaNanti: true },
       pembahasan: [
         t(`Lihat angka satuannya, yaitu ${u}.`, `Look at the ones digit: ${u}.`, `看個位數字：${u}。`),
         u >= 5
@@ -293,6 +309,7 @@ export default [
       ),
       jawaban: ans,
       salah: [hari[(i + n) % 7], hari[(i + n - 2 + 7) % 7], hari[(i + n + 1) % 7]],
+      visual: { j: "kalender", bulan: true, mulai: i, maju: n - 1 },
       pembahasan: [
         t(`Hari yang sama berulang setiap 7 hari, jadi tanggal 1, 8, 15, 22, dan 29 jatuh pada hari ${hari[i]}.`, `The same day repeats every 7 days, so the 1st, 8th, 15th, 22nd and 29th are all ${hari[i]}s.`, `每 7 天重複一次，所以 1、8、15、22、29 號都是${hari[i]}。`),
         s === 0
@@ -312,6 +329,7 @@ export default [
       jawaban: 4 * s,
       satuan: "m",
       salah: [s * s, 2 * s, 3 * s],
+      visual: { j: "pp", p: s, l: s, satuan: "m", ukur: "keliling", hasil: `4 × ${s} = ${4 * s}` },
       pembahasan: [
         t(`Persegi punya 4 sisi yang sama panjang.`, `A square has 4 sides of equal length.`, `正方形有 4 條一樣長的邊。`),
         t(`Keliling $= 4 \\times ${s} = ${4 * s}$ meter.`, `Perimeter $= 4 \\times ${s} = ${4 * s}$ m.`, `周長 $= 4 \\times ${s} = ${4 * s}$ 公尺。`),
@@ -324,6 +342,7 @@ export default [
       pertanyaan: t(`Hasil dari $${a} + ${b} - ${c}$ adalah ...`, `What is $${a} + ${b} - ${c}$?`, `$${a} + ${b} - ${c} = ?$`),
       jawaban: a + b - c,
       salah: [a + b + c, a - b + c, a + b - c + 10],
+      visual: { j: "garis", min: 0, max: a + b, mulai: a, lompat: [{ ke: a + b, label: `+${b}` }, { ke: a + b - c, label: `−${c}` }], tanya: a + b - c, tanyaNanti: true },
       pembahasan: [
         t(`Kerjakan dari kiri ke kanan.`, `Work from left to right.`, `由左往右計算。`),
         `$${a} + ${b} = ${a + b}$, $${a + b} - ${c} = ${a + b - c}$`,
@@ -342,6 +361,7 @@ export default [
       jawaban: diff / 2,
       satuan: t("kelereng", "marbles", "顆"),
       salah: [diff, diff / 2 + 1, diff / 2 - 1],
+      visual: { j: "banding", baris: [{ label: n1, nilai: a }, { label: n2, nilai: b }], pindah: diff / 2, garis: (a + b) / 2, hasil: diff / 2 },
       pembahasan: [
         t(`Selisih kelereng mereka: $${a} - ${b} = ${diff}$.`, `The difference is $${a} - ${b} = ${diff}$ marbles.`, `兩人相差 $${a} - ${b} = ${diff}$ 顆。`),
         t(`Agar sama, selisih itu dibagi dua: $${diff} : 2 = ${diff / 2}$.`, `To make them equal, split the difference in half: $${diff} \\div 2 = ${diff / 2}$.`, `要一樣多，把差平分：$${diff} \\div 2 = ${diff / 2}$。`),

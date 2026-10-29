@@ -232,11 +232,17 @@ export function buildKelas(kelas, templates, seed) {
         topik: { id: t.topik[0], en: t.topik[1], zh: t.topik[2] },
         tingkat: q.tingkat ?? t.tingkat,
         kunci,
+        visual: q.visual,
         teks,
       });
+      // Label gambar yang bergantung pada bahasa disimpan per bahasa.
+      for (const L of LANGS) if (JSON.stringify(qs[L].visual) !== JSON.stringify(q.visual)) teks[L].visual = qs[L].visual;
       made++;
     }
     if (made < t.n) throw new Error(`Kelas ${kelas}, templat "${t.topik[0]}": hanya ${made} soal dibuat`);
   }
   return out.map((q, i) => ({ id: `K${kelas}-${String(i + 1).padStart(3, "0")}`, ...q }));
 }
+
+/** Emoji untuk gambar bantu (kunci = nama benda dalam bahasa Indonesia). */
+export const EMOJI = { kelereng: "🔵", permen: "🍬", stiker: "⭐", kue: "🍪", jeruk: "🍊", pensil: "✏️", apel: "🍎", roti: "🍞", spidol: "🖊️", krayon: "🖍️", penghapus: "🧽" };

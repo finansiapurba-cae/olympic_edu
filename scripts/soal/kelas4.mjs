@@ -10,6 +10,7 @@ export default [
       pertanyaan: t(`KPK dari ${a} dan ${b} adalah ...`, `What is the LCM (least common multiple) of ${a} and ${b}?`, `${a} 和 ${b} 的最小公倍數是多少？`),
       jawaban: L,
       salah: [a * b, gcd(a, b), L * 2, L / 2],
+      visual: { j: "daftar", baris: [a, b].map((x) => ({ label: `×${x}`, angka: kelipatan(x, L) })), sorot: [L] },
       pembahasan: [
         t(`Kelipatan ${a}: `, `Multiples of ${a}: `, `${a} 的倍數：`) + kelipatan(a, L).join(sep) + " ...",
         t(`Kelipatan ${b}: `, `Multiples of ${b}: `, `${b} 的倍數：`) + kelipatan(b, L).join(sep) + " ...",
@@ -24,6 +25,7 @@ export default [
       pertanyaan: t(`FPB dari ${a} dan ${b} adalah ...`, `What is the GCF (greatest common factor) of ${a} and ${b}?`, `${a} 和 ${b} 的最大公因數是多少？`),
       jawaban: G,
       salah: [lcm(a, b), G / 2, G * 2, a],
+      visual: { j: "daftar", baris: [a, b].map((x) => ({ label: x, angka: factors(x) })), sorot: factors(G) },
       pembahasan: [
         t(`Faktor ${a}: `, `Factors of ${a}: `, `${a} 的因數：`) + factors(a).join(sep),
         t(`Faktor ${b}: `, `Factors of ${b}: `, `${b} 的因數：`) + factors(b).join(sep),
@@ -49,6 +51,7 @@ export default [
       jawaban: L,
       satuan: konteks === 0 ? t("detik", "seconds", "秒") : t("hari", "days", "天"),
       salah: [a * b === L ? L * 2 : a * b, a + b, gcd(a, b)],
+      visual: { j: "daftar", baris: [a, b].map((x) => ({ label: `×${x}`, angka: kelipatan(x, L) })), sorot: [L] },
       pembahasan: [
         t(`Waktu bersamaan lagi adalah kelipatan persekutuan terkecil (KPK) dari ${a} dan ${b}.`, `The next time together is the least common multiple (LCM) of ${a} and ${b}.`, `下一次同時發生的時間是 ${a} 和 ${b} 的最小公倍數。`),
         t(`Kelipatan ${a}: `, `Multiples of ${a}: `, `${a} 的倍數：`) + kelipatan(a, L).join(sep) + ". " + t(`Kelipatan ${b}: `, `Multiples of ${b}: `, `${b} 的倍數：`) + kelipatan(b, L).join(sep) + ".",
@@ -69,6 +72,7 @@ export default [
       jawaban: g,
       satuan: t("keranjang", "baskets", "籃"),
       salah: [m + n, lcm(x, y), g * 2, m * n],
+      visual: { j: "daftar", baris: [x, y].map((v) => ({ label: v, angka: factors(v) })), sorot: factors(g) },
       pembahasan: [
         t(`Banyak keranjang harus membagi habis ${x} dan ${y}. Yang paling banyak adalah FPB-nya.`, `The number of baskets must divide both ${x} and ${y}. The greatest such number is the GCF.`, `籃子數必須同時整除 ${x} 和 ${y}，最多就是最大公因數。`),
         t(`Faktor ${x}: `, `Factors of ${x}: `, `${x} 的因數：`) + factors(x).join(sep) + ". " + t(`Faktor ${y}: `, `Factors of ${y}: `, `${y} 的因數：`) + factors(y).join(sep) + ".",
@@ -84,6 +88,7 @@ export default [
       pertanyaan: t(`Banyaknya faktor dari ${n} adalah ...`, `How many factors does ${n} have?`, `${n} 有幾個因數？`),
       jawaban: f.length,
       salah: [f.length - 1, f.length + 1, f.length - 2],
+      visual: { j: "faktor", n, hasil: f.length },
       pembahasan: [
         t(`Cari pasangan perkalian yang hasilnya ${n}: `, `Find the multiplication pairs that make ${n}: `, `找出乘積是 ${n} 的兩數：`) + pairs.join(sep),
         t(`Faktor ${n}: `, `Factors of ${n}: `, `${n} 的因數：`) + f.join(sep),
@@ -99,6 +104,7 @@ export default [
       pertanyaan: t(`Berapa banyak bilangan prima yang lebih dari ${a} dan kurang dari ${b}?`, `How many prime numbers are greater than ${a} and less than ${b}?`, `大於 ${a} 且小於 ${b} 的質數有幾個？`),
       jawaban: ps.length,
       salah: [ps.length + 1, ps.length - 1, ps.length + 2],
+      visual: { j: "grid", dari: a + 1, sampai: b - 1, sorot: ps },
       pembahasan: [
         t(`Bilangan prima adalah bilangan yang hanya punya dua faktor: 1 dan dirinya sendiri. (1 bukan bilangan prima.)`, `A prime number has exactly two factors: 1 and itself. (1 is not a prime number.)`, `質數只有 1 和它本身兩個因數。（1 不是質數。）`),
         t(`Bilangan prima di antara ${a} dan ${b}: `, `Primes between ${a} and ${b}: `, `${a} 和 ${b} 之間的質數：`) + (ps.length ? ps.join(sep) : t("tidak ada", "none", "沒有")) + ".",
@@ -114,6 +120,7 @@ export default [
       pertanyaan: t(`Lambang bilangan Romawi ${s} menyatakan bilangan ...`, `What number does the Roman numeral ${s} stand for?`, `羅馬數字 ${s} 代表多少？`),
       jawaban: n,
       salah: [naif, n + 10, n - 10, n + 1],
+      visual: { j: "romawi", bagian: parts },
       pembahasan: [
         t(`Pisahkan lambangnya: `, `Break it into parts: `, `拆開來看：`) + parts.map(([rr, v]) => `${rr} = ${v}`).join(t(", ", ", ", "、")),
         t(`Ingat: lambang kecil di kiri lambang besar berarti dikurangi (contoh: IV = 4, XL = 40).`, `Remember: a smaller symbol to the left of a bigger one is subtracted (for example IV = 4, XL = 40).`, `注意：小的符號在大的符號左邊表示相減（例如 IV = 4，XL = 40）。`),
@@ -132,6 +139,7 @@ export default [
       jawaban: ang,
       akhiran: "°",
       salah: [360 - ang, ang + 30, ang - 30, h * 10],
+      visual: { j: "jam", waktu: [[h, 0]], sudut: true },
       pembahasan: [
         t(`Angka pada jam membagi lingkaran menjadi 12 bagian. Setiap bagian $= 360^\\circ : 12 = 30^\\circ$.`, `The numbers on a clock split the circle into 12 parts. Each part $= 360^\\circ \\div 12 = 30^\\circ$.`, `鐘面被 12 個數字分成 12 格，每格 $= 360^\\circ \\div 12 = 30^\\circ$。`),
         t(`Pukul ${h}.00: jarum panjang di angka 12, jarum pendek di angka ${h}. Jarak terpendeknya ${k} bagian.`, `At ${h}:00 the minute hand points to 12 and the hour hand to ${h}. They are ${k} parts apart (the shorter way).`, `${h}:00 時分針指 12、時針指 ${h}，相隔 ${k} 格（較近的一邊）。`),
@@ -150,6 +158,7 @@ export default [
       ),
       jawaban: n * k,
       salah: [n + k, n * k + 1, d * k - n, n * k - 1],
+      visual: { j: "pecahan", bar: [{ a: n, b: d }, { a: n * k, b: d * k, sembunyi: true }], op: "=" },
       pembahasan: [
         t(`Penyebut ${d} dikali ${k} menjadi ${d * k}.`, `The denominator ${d} was multiplied by ${k} to get ${d * k}.`, `分母 ${d} 乘以 ${k} 得到 ${d * k}。`),
         t(`Pembilang juga harus dikali ${k}: $${n} \\times ${k} = ${n * k}$.`, `The numerator must be multiplied by ${k} too: $${n} \\times ${k} = ${n * k}$.`, `分子也要乘以 ${k}：$${n} \\times ${k} = ${n * k}$。`),
@@ -166,6 +175,7 @@ export default [
       pertanyaan: t(`Hasil dari $${fr(a, d1)} + ${fr(b, d2)}$ adalah ...`, `What is $${fr(a, d1)} + ${fr(b, d2)}$?`, `$${fr(a, d1)} + ${fr(b, d2)} = ?$`),
       jawaban: ans,
       salah: [`$${fr(a + b, d1 + d2)}$`, `$${fr(a + b, L)}$`, frac(S + 1, L), frac(S - 1, L)].filter((x) => x !== ans && x !== "$0$"),
+      visual: { j: "pecahan", bar: [{ a, b: d1 }, { a: b, b: d2 }], op: "+", hasil: { a: S, b: L } },
       pembahasan: [
         t(`Samakan penyebutnya menjadi ${L} (KPK dari ${d1} dan ${d2}).`, `Make the denominators the same: ${L} (the LCM of ${d1} and ${d2}).`, `通分成分母 ${L}（${d1} 和 ${d2} 的最小公倍數）。`),
         `$${fr(a, d1)} = ${fr(A, L)}$, $${fr(b, d2)} = ${fr(B, L)}$`,
@@ -180,6 +190,7 @@ export default [
       pertanyaan: t(`Hasil dari $0${z}${a} + 0${z}${b}$ adalah ...`, `What is $0${z}${a} + 0${z}${b}$?`, `$0${z}${a} + 0${z}${b} = ?$`),
       jawaban: dec(s),
       salah: [dec(s + 1), dec(Math.max(s - 1, 1)), `0${z}${a}${b}`, s >= 10 ? `0${z}${s}` : `${s}`],
+      visual: { j: "pecahan", bar: [{ a, b: 10 }, { a: b, b: 10 }], op: "+", hasil: { a: s, b: 10 } },
       pembahasan: [
         t(`$0{,}${a}$ artinya ${a} persepuluh dan $0{,}${b}$ artinya ${b} persepuluh.`, `$0.${a}$ means ${a} tenths and $0.${b}$ means ${b} tenths.`, `$0.${a}$ 是 ${a} 個十分之一，$0.${b}$ 是 ${b} 個十分之一。`),
         t(`${a} persepuluh + ${b} persepuluh = ${s} persepuluh.`, `${a} tenths + ${b} tenths = ${s} tenths.`, `${a} 個十分之一 + ${b} 個十分之一 = ${s} 個十分之一。`),
@@ -198,6 +209,7 @@ export default [
       jawaban: p * l - x * y,
       satuan: "m²",
       salah: [p * l, p * l + x * y, 2 * (p + l), p * l - x - y],
+      visual: { j: "pp", p, l, satuan: "m", potong: [x, y], ukur: "luas", hasil: `${p * l} − ${x * y} = ${p * l - x * y}` },
       pembahasan: [
         t(`Luas seluruh lantai: $${p} \\times ${l} = ${p * l}$ m².`, `Whole floor: $${p} \\times ${l} = ${p * l}$ m².`, `整個地板：$${p} \\times ${l} = ${p * l}$ m²。`),
         t(`Luas kolam: $${x} \\times ${y} = ${x * y}$ m².`, `Pool: $${x} \\times ${y} = ${x * y}$ m².`, `水池：$${x} \\times ${y} = ${x * y}$ m²。`),
@@ -213,6 +225,7 @@ export default [
       pertanyaan: t(`Bilangan ${fmt(n)} dibulatkan ke ratusan terdekat menjadi ...`, `Round ${fmt(n)} to the nearest hundred.`, `把 ${fmt(n)} 四捨五入到百位是多少？`),
       jawaban: ans,
       salah: [fl, fl + 100, Math.round(n / 10) * 10, Math.round(n / 1000) * 1000],
+      visual: { j: "garis", min: fl, max: fl + 100, langkah: 10, titik: [n], tanya: ans, tanyaNanti: true },
       pembahasan: [
         t(`Lihat angka puluhannya, yaitu ${pul}.`, `Look at the tens digit: ${pul}.`, `看十位數字：${pul}。`),
         pul >= 5
@@ -228,6 +241,7 @@ export default [
       jawaban: 4 * s,
       satuan: "cm",
       salah: [2 * s, L, 4 * s + 4, L / 2],
+      visual: { j: "pp", p: s, l: s, satuan: "cm", ukur: "keliling", tanyaSisi: true, label: `${L} cm²`, grid: true, hasil: `4 × ${s} = ${4 * s}` },
       pembahasan: [
         t(`Luas persegi = sisi × sisi. Bilangan yang dikali dirinya sendiri menghasilkan ${L} adalah ${s}, jadi sisi = ${s} cm.`, `Area of a square = side × side. The number that times itself gives ${L} is ${s}, so each side is ${s} cm.`, `正方形面積 = 邊長 × 邊長。自己乘自己等於 ${L} 的數是 ${s}，所以邊長是 ${s} 公分。`),
         t(`Keliling $= 4 \\times ${s} = ${4 * s}$ cm.`, `Perimeter $= 4 \\times ${s} = ${4 * s}$ cm.`, `周長 $= 4 \\times ${s} = ${4 * s}$ 公分。`),
@@ -241,6 +255,7 @@ export default [
       pertanyaan: t(`Perhatikan pola: ${seq.join(", ")}, ... Bilangan berikutnya adalah ...`, `Look at the pattern: ${seq.join(", ")}, ... What is the next number?`, `觀察規律：${seq.join("、")}、……下一個數是多少？`),
       jawaban: ans,
       salah: [seq[3] + (seq[3] - seq[2]), ans + 1, ans - 1],
+      visual: { j: "titik", bentuk: "segitiga", suku: [k, k + 1, k + 2, k + 3], tanya: k + 4, jawab: ans },
       pembahasan: [
         t(`Selisihnya: `, `The differences: `, `相鄰兩數的差：`) + `$${seq[1]} - ${seq[0]} = ${k + 1}$, $${seq[2]} - ${seq[1]} = ${k + 2}$, $${seq[3]} - ${seq[2]} = ${k + 3}$`,
         t(`Selisihnya selalu bertambah 1, jadi selisih berikutnya ${k + 4}.`, `The difference grows by 1 each time, so the next difference is ${k + 4}.`, `差每次多 1，所以下一個差是 ${k + 4}。`),
@@ -254,6 +269,7 @@ export default [
       pertanyaan: t(`Hasil dari $${a} + ${b} \\times ${c}$ adalah ...`, `What is $${a} + ${b} \\times ${c}$?`, `$${a} + ${b} \\times ${c} = ?$`),
       jawaban: a + b * c,
       salah: [(a + b) * c, a + b + c, a * b + c],
+      visual: { j: "model", total: "?", bagian: [{ nilai: a, label: a }, ...Array.from({ length: b }, () => ({ nilai: c, label: c, warna: true }))], jawab: a + b * c },
       pembahasan: [
         t(`Perkalian dikerjakan lebih dahulu daripada penjumlahan.`, `Multiplication comes before addition.`, `先乘除，後加減。`),
         `$${b} \\times ${c} = ${b * c}$`,
@@ -267,6 +283,7 @@ export default [
       pertanyaan: t(`Jumlah semua kelipatan ${d} dari 1 sampai ${N} adalah ...`, `What is the sum of all the multiples of ${d} from 1 to ${N}?`, `1 到 ${N} 之間所有 ${d} 的倍數加起來是多少？`),
       jawaban: ans,
       salah: [(k * (k + 1)) / 2, ans - N, ans + d, N * k],
+      visual: { j: "pasangan", suku: kelipatan(d, N), jawab: ans },
       pembahasan: [
         t(`Kelipatan ${d} dari 1 sampai ${N}: `, `Multiples of ${d} from 1 to ${N}: `, `1 到 ${N} 中 ${d} 的倍數：`) + kelipatan(d, N).join(sep) + ".",
         t(`Semuanya adalah ${d} dikali 1, 2, 3, ..., ${k}. Jadi jumlahnya $${d} \\times (1 + 2 + \\cdots + ${k})$.`, `They are ${d} times 1, 2, 3, ..., ${k}. So the sum is $${d} \\times (1 + 2 + \\cdots + ${k})$.`, `它們是 ${d} 乘以 1、2、3、……、${k}，所以和是 $${d} \\times (1 + 2 + \\cdots + ${k})$。`),
@@ -281,6 +298,7 @@ export default [
       jawaban: 1000 * k + m,
       satuan: "m",
       salah: [100 * k + m, k + m, 10000 * k + m],
+      visual: { j: "model", total: "?", bagian: [...Array.from({ length: k }, () => ({ nilai: 1000, label: "1000" })), { nilai: m, label: m }], jawab: fmt(1000 * k + m) },
       pembahasan: [
         t(`1 km = ${fmt(1000)} m, jadi ${k} km $= ${fmt(1000 * k)}$ m.`, `1 km = ${fmt(1000)} m, so ${k} km $= ${fmt(1000 * k)}$ m.`, `1 公里 = ${fmt(1000)} 公尺，所以 ${k} 公里 $= ${fmt(1000 * k)}$ 公尺。`),
         `$${fmt(1000 * k)} + ${m} = ${fmt(1000 * k + m)}$ m`,
@@ -298,6 +316,7 @@ export default [
       jawaban: k,
       satuan: t("hari", "days", "天"),
       salah: [k + 1, k - 1, k * 2, k + 5],
+      visual: { j: "model", total: fmt(Tt), bagian: Array.from({ length: k }, () => ({ nilai: per, label: "" })), sembunyi: true, hasil: k },
       pembahasan: [
         t(`Banyak hari = jumlah tabungan : tabungan per hari.`, `Number of days = total savings ÷ savings per day.`, `天數 = 總金額 ÷ 每天存的錢。`),
         t(`$${fmt(Tt)} : ${fmt(per)} = ${k}$ hari.`, `$${fmt(Tt)} \\div ${fmt(per)} = ${k}$ days.`, `$${fmt(Tt)} \\div ${fmt(per)} = ${k}$ 天。`),
@@ -310,6 +329,7 @@ export default [
       pertanyaan: t(`Angka satuan dari $2^{${n}}$ adalah ...`, `What is the ones digit of $2^{${n}}$?`, `$2^{${n}}$ 的個位數字是多少？`),
       jawaban: ans,
       salah: cyc.filter((v) => v !== ans),
+      visual: { j: "siklus", dasar: 2, isi: cyc, n },
       pembahasan: [
         t(`Angka satuan dari $2^1, 2^2, 2^3, 2^4, 2^5, \\ldots$ adalah 2, 4, 8, 6, 2, ... (berulang setiap 4).`, `The ones digits of $2^1, 2^2, 2^3, 2^4, 2^5, \\ldots$ are 2, 4, 8, 6, 2, ... (repeating every 4).`, `$2^1, 2^2, 2^3, 2^4, 2^5, \\ldots$ 的個位數字是 2、4、8、6、2、……（每 4 個重複）。`),
         t(`$${n} : 4 = ${Math.floor(n / 4)}$ sisa ${s}.`, `$${n} \\div 4 = ${Math.floor(n / 4)}$ remainder ${s}.`, `$${n} \\div 4 = ${Math.floor(n / 4)}$ 餘 ${s}。`),

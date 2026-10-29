@@ -3,6 +3,7 @@ import BarKemajuan from "../components/BarKemajuan";
 import Dialog from "../components/Dialog";
 import MathText from "../components/MathText";
 import Tombol from "../components/Tombol";
+import Visualisasi from "../components/Visualisasi";
 import { KATEGORI_OSN, meta, muatPaket, muatSoal } from "../data/bank";
 import { useBahasa, type Kamus } from "../i18n";
 import { POIN, akurasi, catatJawaban, catatLewati, kunciKelompok, mulaiPutaranBaru, salahUntukKelas, simpanSesi } from "../lib/progres";
@@ -319,6 +320,7 @@ export default function Latihan({
         <h1 className="mt-2 text-xl font-bold leading-relaxed text-tinta sm:text-2xl">
           <MathText text={teks.pertanyaan} />
         </h1>
+        {(teks.visual ?? soal.visual) && <Visualisasi spes={(teks.visual ?? soal.visual)!} tampil={diperiksa} />}
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label={t.pilihanJawaban}>

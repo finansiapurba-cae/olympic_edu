@@ -11,7 +11,13 @@ export interface TeksSoal {
   pertanyaan: string;
   pilihan: Record<Huruf, string>;
   pembahasan: string[];
+  /** gambar bantu khusus bahasa ini (bila labelnya berbeda) */
+  visual?: SpesVisual;
 }
+
+/** Spesifikasi gambar bantu: { j: jenis, ...data }. Lihat components/Visualisasi.tsx */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SpesVisual = { j: string; [k: string]: any };
 
 /** Satu soal di bank soal. Teks boleh memuat rumus KaTeX di antara tanda $...$ */
 export interface Soal {
@@ -26,6 +32,8 @@ export interface Soal {
   paket?: string;
   /** catatan bila pilihan di dokumen asli diperbaiki */
   koreksi?: Teks3;
+  /** gambar bantu soal */
+  visual?: SpesVisual;
 }
 
 export interface MetaPaket {

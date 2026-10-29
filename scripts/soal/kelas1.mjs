@@ -1,4 +1,4 @@
-import { T, KAT, NAMA } from "./lib.mjs";
+import { T, KAT, NAMA, EMOJI } from "./lib.mjs";
 
 // [id, en (jamak), kata bantu bilangan zh, zh]
 const BENDA = [
@@ -27,6 +27,7 @@ export default [
       ),
       jawaban: a + b,
       salah: [a - b, a + b - 1, a + b + 1],
+      visual: { j: "hitung", grup: [{ n: a, e: EMOJI[bi] }, { n: b, e: EMOJI[bi] }], op: "+", hasil: a + b },
       pembahasan: [
         t(`Mula-mula ${n} punya ${a} ${bi}.`, `At first ${n} has ${a} ${be}.`, `${n} 原本有 ${a} ${bc}${bz}。`),
         t(`Diberi lagi ${b}, artinya ditambah: $${a} + ${b} = ${a + b}$.`, `Getting ${b} more means we add: $${a} + ${b} = ${a + b}$.`, `再給 ${b} ${bc}，就是相加：$${a} + ${b} = ${a + b}$。`),
@@ -43,6 +44,7 @@ export default [
       ),
       jawaban: a - b,
       salah: [a + b, a - b + 1, a - b - 1],
+      visual: { j: "hitung", grup: [{ n: a, e: EMOJI[mi], coret: b }], hasil: a - b },
       pembahasan: [
         t(`Dimakan berarti berkurang, jadi kita kurangi.`, `Eating some means there are fewer, so we subtract.`, `吃掉就是變少，所以用減法。`),
         `$${a} - ${b} = ${a - b}$`,
@@ -62,6 +64,7 @@ export default [
       ),
       jawaban: ans,
       salah: [ans + s, ans - 1, ans + 1, seq[3]],
+      visual: { j: "pola", suku: seq, beda: `+${s}`, jawab: ans },
       pembahasan: [
         t(`Hitung selisih dua bilangan yang berdekatan: $${seq[1]} - ${seq[0]} = ${s}$.`, `Find the difference between neighbouring numbers: $${seq[1]} - ${seq[0]} = ${s}$.`, `算出相鄰兩數的差：$${seq[1]} - ${seq[0]} = ${s}$。`),
         t(`Setiap langkah bilangannya bertambah ${s}.`, `Each step adds ${s}.`, `每一步都加 ${s}。`),
@@ -79,6 +82,7 @@ export default [
       ),
       jawaban: ans,
       salah: [ans + 1, ans - 1, ans + 2],
+      visual: { j: "garis", min: a - 1, max: b + 1, titik: [a, b], tanya: ans, tanyaNanti: true },
       pembahasan: [
         t(`Jarak dari ${a} ke ${b} adalah $${b} - ${a} = ${gap}$.`, `The distance from ${a} to ${b} is $${b} - ${a} = ${gap}$.`, `從 ${a} 到 ${b} 相差 $${b} - ${a} = ${gap}$。`),
         t(`Setengah dari ${gap} adalah ${gap / 2}.`, `Half of ${gap} is ${gap / 2}.`, `${gap} 的一半是 ${gap / 2}。`),
@@ -103,6 +107,7 @@ export default [
       ),
       jawaban: String(max),
       salah: nums.filter((v) => v !== max).map(String),
+      visual: { j: "kartu", angka: nums, jawab: max },
       pembahasan: [
         t(`Bandingkan dulu angka puluhan setiap bilangan. Angka puluhan yang paling besar menunjukkan bilangan terbesar.`, `First compare the tens digits. The number with the largest tens digit is the largest.`, `先比較十位數字，十位數字最大的數就最大。`),
         t(`Jika angka puluhannya sama, bandingkan angka satuannya.`, `If the tens digits are the same, compare the ones digits.`, `如果十位數字相同，再比較個位數字。`),
@@ -116,6 +121,7 @@ export default [
       pertanyaan: t(`${p} puluhan dan ${s} satuan membentuk bilangan ...`, `${p} tens and ${s} ones make the number ...`, `${p} 個十和 ${s} 個一合起來是多少？`),
       jawaban: ans,
       salah: [10 * s + p, p + s, ans + 10],
+      visual: { j: "nilaiTempat", angka: ans },
       pembahasan: [
         t(`${p} puluhan $= ${p * 10}$.`, `${p} tens $= ${p * 10}$.`, `${p} 個十 $= ${p * 10}$。`),
         `$${p * 10} + ${s} = ${ans}$`,
@@ -132,6 +138,7 @@ export default [
       ),
       jawaban: c - a,
       salah: [a + c, c - a + 1, c - a - 1],
+      visual: { j: "model", total: c, bagian: [{ nilai: a, label: a }, { nilai: c - a, label: "?" }], jawab: c - a },
       pembahasan: [
         t(`Bilangan di kotak adalah ${c} dikurangi ${a}.`, `The number in the box is ${c} minus ${a}.`, `方格裡的數是 ${c} 減 ${a}。`),
         `$${c} - ${a} = ${c - a}$`,
@@ -151,6 +158,7 @@ export default [
       pertanyaan: t(`Hari ini hari ${hari[i]}. ${n} hari lagi adalah hari ...`, `Today is ${hari[i]}. What day will it be in ${n} days?`, `今天是${hari[i]}。再過 ${n} 天是星期幾？`),
       jawaban: ans,
       salah: [hari[(i + n + 1) % 7], hari[(i + n + 6) % 7], hari[(i + n + 2) % 7]],
+      visual: { j: "kalender", mulai: i, maju: n },
       pembahasan:
         n > 7
           ? [
@@ -170,6 +178,7 @@ export default [
       ),
       jawaban: ans,
       salah: [a + b, 4 * a + 2 * b, 2 * (a + b), 4 * (a + b)],
+      visual: { j: "kelompok", grup: [{ n: a, e: "🐔", isi: 2 }, { n: b, e: "🐱", isi: 4 }], hasil: ans },
       pembahasan: [
         t(`Ayam berkaki 2 dan kucing berkaki 4.`, `A chicken has 2 legs and a cat has 4 legs.`, `雞有 2 隻腳，貓有 4 隻腳。`),
         t(`Kaki ayam: $${a} \\times 2 = ${2 * a}$. Kaki kucing: $${b} \\times 4 = ${4 * b}$.`, `Chicken legs: $${a} \\times 2 = ${2 * a}$. Cat legs: $${b} \\times 4 = ${4 * b}$.`, `雞腳：$${a} \\times 2 = ${2 * a}$。貓腳：$${b} \\times 4 = ${4 * b}$。`),
@@ -187,6 +196,7 @@ export default [
       ),
       jawaban: a + b,
       salah: [a + b - 1, a + b + 1, b],
+      visual: { j: "antrian", total: a + b, posisi: a },
       pembahasan: [
         t(`Urutan ke-${a} dari depan berarti ada ${a} anak dari depan sampai ${n} (termasuk ${n}).`, `Being number ${a} from the front means there are ${a} children up to and including ${n}.`, `從前面數第 ${a} 個，表示從第一個到 ${n}（包括 ${n}）共有 ${a} 個人。`),
         t(`Ditambah ${b} anak di belakangnya: $${a} + ${b} = ${a + b}$.`, `Add the ${b} children behind: $${a} + ${b} = ${a + b}$.`, `再加上後面的 ${b} 個人：$${a} + ${b} = ${a + b}$。`),
@@ -203,6 +213,7 @@ export default [
       ),
       jawaban: ke(ans),
       salah: [ke(n - a), ke(n - a + 2), ke(a), ke(n - a - 1)],
+      visual: { j: "antrian", total: n, posisi: a, belakang: true },
       pembahasan: [
         t(`Di depan ${nm} ada ${a - 1} anak.`, `There are ${a - 1} children in front of ${nm}.`, `${nm} 前面有 ${a - 1} 個人。`),
         t(`Dari ${nm} sampai paling belakang: $${n} - ${a - 1} = ${ans}$ anak.`, `From ${nm} to the very back: $${n} - ${a - 1} = ${ans}$ children.`, `從 ${nm} 到最後一個：$${n} - ${a - 1} = ${ans}$ 個人。`),
@@ -217,6 +228,7 @@ export default [
       pertanyaan: t(`Sekarang ${pukul(h, 0)}. ${d} jam lagi pukul berapa?`, `It is ${pukul(h, 0)} now. What time will it be in ${d} hours?`, `現在是 ${pukul(h, 0)}。再過 ${d} 小時是幾點？`),
       jawaban: f(x),
       salah: [f(x + 1), f(x - 1), f(h - d)],
+      visual: { j: "jam", waktu: [[h, 0], [x, 0]], tanya: 1, durasi: d * 60 },
       pembahasan:
         h + d > 12
           ? [
@@ -238,6 +250,7 @@ export default [
       langkah: 1000,
       jawaban: a + b,
       salah: [a + b - 1000, a + b + 1000, Math.abs(b - a)],
+      visual: { j: "model", total: "?", bagian: [{ nilai: a, label: fmt(a) }, { nilai: b, label: fmt(b) }], jawab: fmt(a + b) },
       pembahasan: [t(`Harga keduanya dijumlahkan.`, `Add the two prices.`, `把兩個價錢加起來。`), `$${fmt(a)} + ${fmt(b)} = ${fmt(a + b)}$`],
     };
   }),
@@ -250,6 +263,7 @@ export default [
       pertanyaan: t(`Berapa banyak bilangan ${jenis} dari 1 sampai ${n}?`, `How many ${jenis} numbers are there from 1 to ${n}?`, `從 1 到 ${n}，一共有幾個${jenis}？`),
       jawaban: list.length,
       salah: [list.length + 1, list.length - 1, n],
+      visual: { j: "grid", dari: 1, sampai: n, sorot: list },
       pembahasan: [
         t(`Tuliskan bilangan ${jenis} dari 1 sampai ${n}: ${list.join(", ")}.`, `List the ${jenis} numbers from 1 to ${n}: ${list.join(", ")}.`, `寫出 1 到 ${n} 的${jenis}：${list.join("、")}。`),
         t(`Hitung banyaknya: ada ${list.length} bilangan.`, `Count them: there are ${list.length} numbers.`, `數一數，共有 ${list.length} 個。`),
@@ -267,6 +281,7 @@ export default [
       jawaban: a - b,
       satuan: t("tahun", "years", "歲"),
       salah: [a + b, a - b + 1, a - b - 1],
+      visual: { j: "banding", baris: [{ label: t("Kakak", "Sister", "姊姊"), nilai: a }, { label: t("Adik", "Brother", "弟弟"), nilai: b }], selisih: "?", jawab: a - b },
       pembahasan: [t(`Selisih berarti dikurangi: yang besar dikurangi yang kecil.`, `Difference means subtract: the bigger number minus the smaller one.`, `相差就是用大的數減小的數。`), `$${a} - ${b} = ${a - b}$`],
     };
   }),
@@ -277,6 +292,7 @@ export default [
       pertanyaan: t(`Hasil dari $${a} + ${b} + ${c}$ adalah ...`, `What is $${a} + ${b} + ${c}$?`, `$${a} + ${b} + ${c} = ?$`),
       jawaban: s,
       salah: [s + 1, s - 1, a + b, s + 10],
+      visual: { j: "hitung", grup: [{ n: a, e: "🔵" }, { n: b, e: "🟠" }, { n: c, e: "🟢" }], op: "+", hasil: s },
       pembahasan: [
         t(`Jumlahkan dua bilangan pertama: $${a} + ${b} = ${a + b}$.`, `Add the first two numbers: $${a} + ${b} = ${a + b}$.`, `先算前兩個數：$${a} + ${b} = ${a + b}$。`),
         t(`Tambahkan ${c}: $${a + b} + ${c} = ${s}$.`, `Then add ${c}: $${a + b} + ${c} = ${s}$.`, `再加 ${c}：$${a + b} + ${c} = ${s}$。`),
@@ -295,6 +311,7 @@ export default [
       jawaban: k,
       satuan: t("kotak", "boxes", "盒"),
       salah: [k + 1, k - 1, per, total - per],
+      visual: { j: "kelompok", grup: [{ n: k, e: "📦", isi: per, titik: "🍪" }], sembunyi: true, hasil: k },
       pembahasan: [
         t(`Ambil ${per} kue setiap kali sampai habis: $${chain.join(" \\to ")}$.`, `Take ${per} cookies at a time until none are left: $${chain.join(" \\to ")}$.`, `每次拿走 ${per} 片，直到拿完：$${chain.join(" \\to ")}$。`),
         t(`Kita mengambil ${k} kali, jadi diperlukan ${k} kotak.`, `We took ${k} times, so we need ${k} boxes.`, `一共拿了 ${k} 次，所以需要 ${k} 個盒子。`),
@@ -317,6 +334,7 @@ export default [
       ),
       jawaban: ans,
       salah: [besar ? mn * 10 + mx : mx * 10 + mn, a + b, besar ? mx * 11 : mn * 11],
+      visual: { j: "kartu", angka: [a, b], jawab: ans },
       pembahasan: besar
         ? [
             t(`Agar bilangannya terbesar, angka yang lebih besar (${mx}) diletakkan di tempat puluhan.`, `To make the largest number, put the bigger digit (${mx}) in the tens place.`, `要最大，就把較大的數字 ${mx} 放在十位。`),
@@ -338,6 +356,7 @@ export default [
       ),
       jawaban: ans,
       salah: [a + b + c, a - b, a + c],
+      visual: { j: "garis", min: 0, max: Math.max(a, ans) + 1, mulai: 0, lompat: [{ ke: a, label: `+${a}` }, { ke: a - b, label: `−${b}` }, { ke: ans, label: `+${c}` }], tanya: ans, tanyaNanti: true },
       pembahasan: [
         t(`Naik berarti ditambah, turun berarti dikurangi.`, `Going up means add, going down means subtract.`, `往上用加法，往下用減法。`),
         `$${a} - ${b} = ${a - b}$, $${a - b} + ${c} = ${ans}$`,
@@ -355,6 +374,7 @@ export default [
       ][jenis],
       jawaban: ans,
       salah: [n - 1, n + 1, n + 10, n - 10, n],
+      visual: { j: "garis", min: n - 2, max: n + 11, titik: [n], tanya: ans, tanyaNanti: true },
       pembahasan: [
         [
           t(`Bilangan tepat sebelum berarti dikurangi 1: $${n} - 1 = ${ans}$.`, `Just before means subtract 1: $${n} - 1 = ${ans}$.`, `前一個數就是減 1：$${n} - 1 = ${ans}$。`),
@@ -375,6 +395,7 @@ export default [
       jawaban: n / 2,
       satuan: t("buah", "oranges", "個"),
       salah: [n * 2, n / 2 + 1, n - 2],
+      visual: { j: "kelompok", grup: [{ n: 2, e: "🧺", isi: n / 2, titik: "🍊" }], hasil: n / 2 },
       pembahasan: [
         t(`Setengah berarti dibagi menjadi 2 bagian yang sama banyak.`, `Half means splitting into 2 equal parts.`, `一半就是平分成 2 份。`),
         t(`Setengah dari ${n} adalah ${n / 2}, karena $${n / 2} + ${n / 2} = ${n}$.`, `Half of ${n} is ${n / 2}, because $${n / 2} + ${n / 2} = ${n}$.`, `${n} 的一半是 ${n / 2}，因為 $${n / 2} + ${n / 2} = ${n}$。`),
@@ -392,6 +413,7 @@ export default [
       ),
       jawaban: ans,
       salah: [ans - s, ans + 1, ans - 1, seq[3] + s],
+      visual: { j: "pola", suku: seq, beda: `−${s}`, jawab: ans },
       pembahasan: [
         t(`Setiap langkah bilangannya berkurang ${s} (contoh: $${seq[0]} - ${seq[1]} = ${s}$).`, `Each step takes away ${s} (for example $${seq[0]} - ${seq[1]} = ${s}$).`, `每一步都減 ${s}（例如 $${seq[0]} - ${seq[1]} = ${s}$）。`),
         t(`Bilangan berikutnya: $${seq[3]} - ${s} = ${ans}$.`, `Next number: $${seq[3]} - ${s} = ${ans}$.`, `下一個數：$${seq[3]} - ${s} = ${ans}$。`),
