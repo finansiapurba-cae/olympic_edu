@@ -9,7 +9,7 @@ export default function BarKemajuan({ nilai, maks, label }: { nilai: number; mak
         </span>
       </div>
       <div className="h-2.5 overflow-hidden rounded-full bg-utama-muda" role="progressbar" aria-valuemin={0} aria-valuemax={maks} aria-valuenow={nilai} aria-label={label}>
-        <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#14B8A6] transition-[width] duration-500" style={{ width: `${persen}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#38BDF8] transition-[width] duration-500" style={{ width: `${persen}%` }} />
       </div>
     </div>
   );

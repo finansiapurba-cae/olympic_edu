@@ -39,7 +39,7 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
       <SampulLebah onMulai={() => gulirKe("pilih-latihan")} onPaket={() => gulirKe("paket-olimpiade")} jumlahSoal={TOTAL_BANK} jumlahPaket={TOTAL_PAKET} />
       <main className="mx-auto w-full max-w-3xl px-4 pb-8 pt-6 sm:px-6 sm:pb-12">
         <section id="pilih-latihan" className="scroll-mt-4 rounded-3xl bg-white p-6 shadow-kartu sm:p-10">
-          <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0D9488] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.eyebrow}</p>
+          <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.eyebrow}</p>
           <h2 className="mt-3 text-balance text-3xl font-extrabold leading-tight text-tinta sm:text-4xl">{t.judul}</h2>
           <p className="mt-3 max-w-prose text-base leading-relaxed text-redup">{t.intro}</p>
 
@@ -147,9 +147,9 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
         </section>
 
         {meta.paket.length > 0 && (
-          <section id="paket-olimpiade" className="mt-6 scroll-mt-4 rounded-3xl border-2 border-[#14B8A6]/30 bg-white p-6 shadow-kartu sm:p-8">
+          <section id="paket-olimpiade" className="mt-6 scroll-mt-4 rounded-3xl border-2 border-[#38BDF8]/30 bg-white p-6 shadow-kartu sm:p-8">
             <div className="flex items-start gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1E40AF] to-[#14B8A6] text-xl font-extrabold text-white" aria-hidden="true">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#1E40AF] to-[#38BDF8] text-xl font-extrabold text-white" aria-hidden="true">
                 ⬢
               </span>
               <div>
@@ -161,14 +161,14 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
               {meta.paket.map((p) => {
                 const n = progres.sudahDikerjakan[`paket-${p.id}`]?.length ?? 0;
                 return (
-                  <li key={p.id} className="flex flex-wrap items-center gap-4 rounded-2xl bg-gradient-to-br from-[#EFF6FF] via-white to-[#E6FFFB] p-4 ring-1 ring-[#14B8A6]/20">
+                  <li key={p.id} className="flex flex-wrap items-center gap-4 rounded-2xl bg-gradient-to-br from-[#EFF6FF] via-white to-[#E0F2FE] p-4 ring-1 ring-[#38BDF8]/20">
                     <div className="min-w-0 flex-1">
                       <h3 className="font-bold text-tinta">{p.judul[bahasa]}</h3>
                       <p className="text-sm text-redup">
                         {p.deskripsi[bahasa]} · {t.nSoal(p.total)} · {t.paketKelas(p.kelas)}
                       </p>
                       <div className="mt-2 h-2 overflow-hidden rounded-full bg-white">
-                        <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#14B8A6]" style={{ width: `${Math.round((n / p.total) * 100)}%` }} />
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#38BDF8]" style={{ width: `${Math.round((n / p.total) * 100)}%` }} />
                       </div>
                       <p className="mt-1 text-xs tabular-nums text-redup">{t.paketSudah(n, p.total)}</p>
                     </div>

@@ -55,3 +55,78 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .lebah-terbang, .sayap-lebah, .jejak-terbang, .kilau, .tetes-madu { animation: none; }
 }
+
+/* Adegan murid di sampul */
+@keyframes melayang {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes awan {
+  from { transform: translateX(0); }
+  to { transform: translateX(22px); }
+}
+@keyframes lambai {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(16deg); }
+}
+@keyframes kedip {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes napas {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes bayangan-napas {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.92); }
+}
+@keyframes api-roket {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.6); }
+}
+@keyframes bola-pantul {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-18px); }
+  55% { transform: translateY(-18px); }
+}
+@keyframes kilat-sapuan {
+  to { stroke-dashoffset: -300; }
+}
+.melayang { animation: melayang 4s ease-in-out infinite; }
+.awan { animation: awan 7s ease-in-out infinite alternate; }
+.lambai { transform-box: view-box; transform-origin: 252px 214px; animation: lambai 1.4s ease-in-out infinite; }
+.kedip { transform-box: fill-box; transform-origin: center; animation: kedip 4.5s infinite; }
+.napas { animation: napas 3s ease-in-out infinite; }
+.bayangan-napas { transform-box: fill-box; transform-origin: center; animation: bayangan-napas 3s ease-in-out infinite; }
+.api-roket { transform-box: fill-box; transform-origin: top; animation: api-roket 0.25s ease-in-out infinite; }
+.bola-pantul { animation: bola-pantul 1.8s ease-in-out infinite; }
+.kilat-sapuan { animation: kilat-sapuan 3s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .melayang, .awan, .lambai, .kedip, .napas, .bayangan-napas, .api-roket, .bola-pantul, .kilat-sapuan { animation: none; }
+}
+
+/* Lebah terbang mengitari murid */
+@keyframes lebah-orbit {
+  0.00% { transform: translate(45px, 196px) scaleX(1); }
+  6.25% { transform: translate(58px, 245px) scaleX(1); }
+  12.50% { transform: translate(93px, 287px) scaleX(1); }
+  18.75% { transform: translate(147px, 314px) scaleX(1); }
+  25.00% { transform: translate(210px, 324px) scaleX(1); }
+  31.25% { transform: translate(273px, 314px) scaleX(1); }
+  37.50% { transform: translate(327px, 287px) scaleX(1); }
+  43.75% { transform: translate(362px, 245px) scaleX(1); }
+  50.00% { transform: translate(375px, 196px) scaleX(1); }
+  56.25% { transform: translate(362px, 147px) scaleX(-1); }
+  62.50% { transform: translate(327px, 105px) scaleX(-1); }
+  68.75% { transform: translate(273px, 78px) scaleX(-1); }
+  75.00% { transform: translate(210px, 68px) scaleX(-1); }
+  81.25% { transform: translate(147px, 78px) scaleX(-1); }
+  87.50% { transform: translate(93px, 105px) scaleX(-1); }
+  93.75% { transform: translate(58px, 147px) scaleX(-1); }
+  100.00% { transform: translate(45px, 196px) scaleX(1); }
+}
+.lebah-orbit { animation: lebah-orbit 11s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .lebah-orbit { animation: none; transform: translate(345px, 268px); }
+}

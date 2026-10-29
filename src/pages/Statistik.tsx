@@ -29,7 +29,7 @@ export default function Statistik({ progres, onReset, keBeranda }: { progres: Pr
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0D9488] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.statEyebrow}</p>
+          <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.statEyebrow}</p>
           <h1 className="mt-2 text-3xl font-extrabold text-tinta">{t.statJudul(p.nama)}</h1>
         </div>
         <Tombol onClick={keBeranda}>{t.mulaiLatihan}</Tombol>
@@ -38,7 +38,7 @@ export default function Statistik({ progres, onReset, keBeranda }: { progres: Pr
       <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
         {kartu.map(([k, v, ket]) => (
           <div key={k} className="rounded-2xl bg-white p-4 shadow-kartu sm:p-5">
-            <div className="mb-3 h-1.5 w-10 rounded-full bg-gradient-to-r from-[#1E40AF] to-[#0D9488]" aria-hidden="true" />
+            <div className="mb-3 h-1.5 w-10 rounded-full bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9]" aria-hidden="true" />
             <p className="text-sm font-semibold text-redup">{k}</p>
             <p className="mt-1 text-3xl font-extrabold tabular-nums text-tinta">{v}</p>
             {ket && <p className="mt-1 text-xs text-redup">{ket}</p>}
@@ -62,7 +62,7 @@ export default function Statistik({ progres, onReset, keBeranda }: { progres: Pr
                     </span>
                   </div>
                   <div className="h-3 overflow-hidden rounded-full bg-halaman">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#14B8A6]" style={{ width: `${a}%` }} />
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#1E40AF] to-[#38BDF8]" style={{ width: `${a}%` }} />
                   </div>
                 </div>
               );
