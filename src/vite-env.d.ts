@@ -2,4 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_SHEET_URL?: string;
+  readonly VITE_SUPABASE_URL?: string;
+  readonly VITE_SUPABASE_KEY?: string;
 }

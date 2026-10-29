@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Navbar from "./components/Navbar";
 import IkonBadge from "./components/IkonBadge";
 import Beranda from "./pages/Beranda";
 import Latihan from "./pages/Latihan";
 import Statistik from "./pages/Statistik";
+import Masuk from "./pages/Masuk";
+import { AKUN_AKTIF, AkunError, ambilProgresAkun, keluar, muatSesi, simpanProgresAkun, type Sesi } from "./lib/akun";
 import { periksaBadge, type Badge } from "./lib/badge";
 import { PenyediaBahasa, useBahasa } from "./i18n";
 import { muatProgres, progresBaru, simpanProgres } from "./lib/progres";
@@ -15,14 +17,86 @@ type Halaman = "beranda" | "latihan" | "statistik";
 export default function App() {
   return (
     <PenyediaBahasa>
-      <Aplikasi />
+      <Gerbang />
     </PenyediaBahasa>
   );
 }
 
-function Aplikasi() {
+const banyakKerja = (p: Progres) => p.totalDijawab + p.totalDilewati;
+
+/** Bila fitur akun aktif, murid harus masuk (atau daftar) dulu sebelum berlatih. */
+function Gerbang() {
   const { t } = useBahasa();
-  const [progres, setProgres] = useState<Progres>(muatProgres);
+  const [sesi, setSesi] = useState<Sesi | null>(muatSesi);
+  const [awal, setAwal] = useState<Progres | null>(null);
+
+  // Ambil progres dari server: yang lebih banyak isinya (server atau perangkat ini) dipakai.
+  const muatDariServer = useCallback(async (s: Sesi, lokal: Progres) => {
+    try {
+      const { sesi: segar, progres: server } = await ambilProgresAkun(s);
+      setSesi(segar);
+      const pakai = server && banyakKerja(server) >= banyakKerja(lokal) ? { ...lokal, ...server } : lokal;
+      setAwal({ ...pakai, nama: segar.nama });
+    } catch (e) {
+      if (e instanceof AkunError && e.kode === "salahMasuk") {
+        keluar(s);
+        setSesi(null);
+        setAwal(null);
+      } else setAwal({ ...lokal, nama: s.nama }); // tanpa internet: lanjut dengan progres di perangkat
+    }
+  }, []);
+
+  // Sudah masuk dari kunjungan sebelumnya: tunggu progres dari server dulu.
+  const sudahCek = useRef(false);
+  useEffect(() => {
+    if (sudahCek.current || !sesi || awal) return;
+    sudahCek.current = true;
+    muatDariServer(sesi, muatProgres(sesi.id));
+  }, [sesi, awal, muatDariServer]);
+
+  if (!AKUN_AKTIF) return <Aplikasi />;
+  if (!sesi)
+    return (
+      <Masuk
+        onMasuk={(s) => {
+          sudahCek.current = true;
+          setSesi(s);
+          setAwal(null);
+          // Akun baru memakai progres yang sudah ada di perangkat ini (jika ada).
+          const lokal = muatProgres(s.id);
+          muatDariServer(s, banyakKerja(lokal) ? lokal : muatProgres());
+        }}
+      />
+    );
+  if (!awal)
+    return (
+      <div className="grid min-h-screen place-items-center bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#0EA5E9] text-lg font-bold text-white">
+        <span>
+          <span aria-hidden="true">🐝 </span>
+          {t.akunMemuat}
+        </span>
+      </div>
+    );
+  return (
+    <Aplikasi
+      key={sesi.id}
+      sesi={sesi}
+      awal={awal}
+      onSesi={setSesi}
+      onKeluar={() => {
+        keluar(sesi);
+        sudahCek.current = false;
+        setSesi(null);
+        setAwal(null);
+      }}
+    />
+  );
+}
+
+function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progres; onSesi?: (s: Sesi) => void; onKeluar?: () => void } = {}) {
+  const { t } = useBahasa();
+  const [progres, setProgres] = useState<Progres>(() => awal ?? muatProgres());
+  const [gagalSimpan, setGagalSimpan] = useState(false);
   const [halaman, setHalaman] = useState<Halaman>("beranda");
   const [pengaturan, setPengaturan] = useState<PengaturanSesi>({ kelas: 1, tingkat: "campuran", mode: "latihan", durasiMenit: 20 });
   const [kunciSesi, setKunciSesi] = useState(0);
@@ -38,8 +112,50 @@ function Aplikasi() {
       setBadgeBaru((b) => [...b, ...baru]);
       return;
     }
-    simpanProgres(progres);
-  }, [progres]);
+    simpanProgres(progres, sesi?.id);
+  }, [progres, sesi?.id]);
+
+  // Progres akun dikirim ke server 1,5 detik setelah perubahan terakhir, dan saat tab ditutup/disembunyikan.
+  const sesiRef = useRef(sesi);
+  sesiRef.current = sesi;
+  const progresRef = useRef(progres);
+  progresRef.current = progres;
+  const tertunda = useRef(false);
+  const kirimKeServer = useCallback(() => {
+    const s = sesiRef.current;
+    if (!s || !tertunda.current) return;
+    tertunda.current = false;
+    simpanProgresAkun(s, progresRef.current)
+      .then((baru) => {
+        setGagalSimpan(false);
+        if (baru !== s) onSesi?.(baru);
+      })
+      .catch(() => {
+        tertunda.current = true;
+        setGagalSimpan(true);
+      });
+  }, [onSesi]);
+  const pertama = useRef(true);
+  useEffect(() => {
+    if (!sesi) return;
+    if (pertama.current) {
+      pertama.current = false;
+      return;
+    }
+    tertunda.current = true;
+    const id = setTimeout(kirimKeServer, 1500);
+    return () => clearTimeout(id);
+  }, [progres, sesi, kirimKeServer]);
+  useEffect(() => {
+    if (!sesi) return;
+    const sembunyi = () => document.visibilityState === "hidden" && kirimKeServer();
+    document.addEventListener("visibilitychange", sembunyi);
+    window.addEventListener("pagehide", kirimKeServer);
+    return () => {
+      document.removeEventListener("visibilitychange", sembunyi);
+      window.removeEventListener("pagehide", kirimKeServer);
+    };
+  }, [sesi, kirimKeServer]);
 
   useEffect(() => {
     if (!badgeBaru.length) return;
@@ -59,7 +175,14 @@ function Aplikasi() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-halaman to-[#E6F4FF] font-sans text-tinta">
-      <Navbar nama={progres.nama} onNama={(nama) => ubah((p) => ({ ...p, nama }))} halaman={halaman} onPindah={pindah} />
+      <Navbar
+        nama={progres.nama}
+        onNama={(nama) => ubah((p) => ({ ...p, nama }))}
+        akun={sesi ? { username: sesi.username, onKeluar: () => { kirimKeServer(); onKeluar?.(); } } : undefined}
+        halaman={halaman}
+        onPindah={pindah}
+      />
+      {gagalSimpan && <p className="bg-[#FEF3C7] px-4 py-2 text-center text-sm font-semibold text-[#92400E]">{t.akunGagalSimpan}</p>}
       {halaman === "beranda" && <Beranda progres={progres} awal={pengaturan} onMulai={mulai} />}
       {halaman === "latihan" && (
         <Latihan

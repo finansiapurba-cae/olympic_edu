@@ -1,5 +1,6 @@
 import type { Bahasa, RiwayatSesi } from "../types";
 import { akurasi } from "./progres";
+import { muatSesi } from "./akun";
 
 // Alamat Web App Google Apps Script yang menulis ke Google Sheet guru (lihat google-sheet/PANDUAN.md).
 // Kosong = hasil tidak dikirim ke mana pun. Bisa juga diisi lewat variabel Netlify VITE_SHEET_URL.
@@ -27,7 +28,10 @@ export function kirimHasil(r: RiwayatSesi, nama: string, bahasa: Bahasa) {
   if (!SHEET_URL) return;
   const baris = {
     tanggal: r.tanggal,
-    nama: nama.trim() || "(tanpa nama)",
+    nama: (() => {
+      const s = muatSesi();
+      return s ? `${s.nama} (@${s.username})` : nama.trim() || "(tanpa nama)";
+    })(),
     perangkat: kodePerangkat(),
     kelas: r.kelas,
     mode: r.mode,

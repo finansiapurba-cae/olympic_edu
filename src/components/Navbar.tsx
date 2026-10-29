@@ -5,11 +5,14 @@ type Halaman = "beranda" | "statistik";
 export default function Navbar({
   nama,
   onNama,
+  akun,
   halaman,
   onPindah,
 }: {
   nama: string;
   onNama: (v: string) => void;
+  /** bila murid masuk dengan akun: nama tidak diketik lagi, diganti tombol keluar */
+  akun?: { username: string; onKeluar: () => void };
   halaman: Halaman | "latihan";
   onPindah: (h: Halaman) => void;
 }) {
@@ -60,6 +63,20 @@ export default function Navbar({
               </button>
             ))}
           </div>
+          {akun ? (
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/15 text-lg" aria-hidden="true">
+                🐝
+              </span>
+              <span className="min-w-0 leading-tight">
+                <span className="block truncate text-sm font-bold">{nama}</span>
+                <span className="block truncate text-xs text-white/65">@{akun.username}</span>
+              </span>
+              <button type="button" onClick={akun.onKeluar} className="ml-auto rounded-lg border border-white/25 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/10 sm:ml-2">
+                {t.akunKeluar}
+              </button>
+            </div>
+          ) : (
           <label className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
             <span className="text-sm font-medium text-white/75">{t.namaPeserta}</span>
             <input
@@ -70,6 +87,7 @@ export default function Navbar({
               className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-sigma focus:outline-none focus:ring-2 focus:ring-sigma/40 sm:w-44 sm:flex-none"
             />
           </label>
+          )}
         </div>
       </div>
       <div className="h-1 bg-gradient-to-r from-[#3B82F6] via-[#7DD3FC] to-[#C9A13B]" aria-hidden="true" />

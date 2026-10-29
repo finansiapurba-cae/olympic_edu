@@ -31,9 +31,12 @@ export function progresBaru(nama = ""): Progres {
   };
 }
 
-export function muatProgres(): Progres {
+/** akun: id akun yang masuk, agar progres beberapa murid di satu perangkat tidak tercampur. */
+const kunciUntuk = (akun?: string) => (akun ? `${KUNCI}:${akun}` : KUNCI);
+
+export function muatProgres(akun?: string): Progres {
   try {
-    const raw = localStorage.getItem(KUNCI);
+    const raw = localStorage.getItem(kunciUntuk(akun));
     if (!raw) return progresBaru();
     const data = JSON.parse(raw) as Partial<Progres>;
     if (data.versi !== 1) return progresBaru();
@@ -43,9 +46,9 @@ export function muatProgres(): Progres {
   }
 }
 
-export function simpanProgres(p: Progres) {
+export function simpanProgres(p: Progres, akun?: string) {
   try {
-    localStorage.setItem(KUNCI, JSON.stringify(p));
+    localStorage.setItem(kunciUntuk(akun), JSON.stringify(p));
   } catch {
     /* penyimpanan tidak tersedia (mode privat), progres hanya bertahan selama halaman terbuka */
   }
