@@ -7,6 +7,7 @@ import Statistik from "./pages/Statistik";
 import { periksaBadge, type Badge } from "./lib/badge";
 import { PenyediaBahasa, useBahasa } from "./i18n";
 import { muatProgres, progresBaru, simpanProgres } from "./lib/progres";
+import { SHEET_URL } from "./lib/kirimHasil";
 import type { PengaturanSesi, Progres } from "./types";
 
 type Halaman = "beranda" | "latihan" | "statistik";
@@ -75,7 +76,7 @@ function Aplikasi() {
       {halaman === "statistik" && <Statistik progres={progres} onReset={() => setProgres(progresBaru(progres.nama))} keBeranda={() => pindah("beranda")} />}
 
       <footer className="px-4 pb-10 pt-4 text-center text-xs text-redup">
-        <span className="font-semibold text-tinta">Olympic Edu</span> · olympicedu.netlify.app · {t.footer}
+        <span className="font-semibold text-tinta">Olympic Edu</span> · olympicedu.netlify.app · {SHEET_URL ? t.footerKirim : t.footer}
       </footer>
 
       {badgeBaru[0] && (

@@ -8,6 +8,7 @@ import { KATEGORI_OSN, meta, muatPaket, muatSoal } from "../data/bank";
 import { useBahasa, type Kamus } from "../i18n";
 import { POIN, akurasi, catatJawaban, catatLewati, kunciKelompok, mulaiPutaranBaru, salahUntukKelas, simpanSesi } from "../lib/progres";
 import { acak, formatWaktu, pecahDurasi } from "../lib/util";
+import { kirimHasil } from "../lib/kirimHasil";
 import type { Huruf, PengaturanSesi, Progres, Soal } from "../types";
 
 const HURUF: Huruf[] = ["A", "B", "C", "D"];
@@ -108,24 +109,24 @@ export default function Latihan({
   }, [detik, batasDetik, selesai, akhiri]);
 
   // Simpan riwayat sekali saat sesi selesai, atau saat pindah halaman di tengah sesi.
-  const dataSesi = useRef({ sesi, detik });
-  dataSesi.current = { sesi, detik };
+  const dataSesi = useRef({ sesi, detik, nama: progres.nama, bahasa });
+  dataSesi.current = { sesi, detik, nama: progres.nama, bahasa };
   const simpanRiwayat = useCallback(() => {
-    const { sesi: s, detik: d } = dataSesi.current;
+    const { sesi: s, detik: d, nama, bahasa: b } = dataSesi.current;
     if (tersimpan.current || s.dijawab + s.dilewati === 0) return;
     tersimpan.current = true;
-    ubah((p) =>
-      simpanSesi(p, {
-        id: `${Date.now()}`,
-        tanggal: new Date().toISOString(),
-        kelas,
-        tingkat: mode === "latihan" || mode === "simulasi" ? tingkat : "campuran",
-        mode,
-        paket: pengaturan.paket,
-        ...s,
-        durasiDetik: d,
-      }),
-    );
+    const r = {
+      id: `${Date.now()}`,
+      tanggal: new Date().toISOString(),
+      kelas,
+      tingkat: mode === "latihan" || mode === "simulasi" ? tingkat : ("campuran" as const),
+      mode,
+      paket: pengaturan.paket,
+      ...s,
+      durasiDetik: d,
+    };
+    ubah((p) => simpanSesi(p, r));
+    kirimHasil(r, nama, b);
   }, [ubah, kelas, tingkat, mode, pengaturan.paket]);
   useEffect(() => {
     if (selesai) simpanRiwayat();
