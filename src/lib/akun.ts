@@ -2,8 +2,9 @@ import type { Kelas, Progres } from "../types";
 
 // Akun murid (username + kata sandi) memakai Supabase Auth, dan progres disimpan di tabel "progres".
 // Panduan pemasangan: supabase/PANDUAN.md. Kosong = fitur akun mati, progres hanya di perangkat.
-export const SUPABASE_URL: string = (import.meta.env.VITE_SUPABASE_URL ?? "").replace(/\/$/, "");
-export const SUPABASE_KEY: string = import.meta.env.VITE_SUPABASE_KEY ?? "";
+// Kunci "publishable" memang untuk dipakai di browser; keamanan data dijaga oleh aturan RLS di supabase/setup.sql.
+export const SUPABASE_URL: string = (import.meta.env.VITE_SUPABASE_URL ?? "https://fcxjxgvsmgyptnvdbarn.supabase.co").replace(/\/$/, "");
+export const SUPABASE_KEY: string = import.meta.env.VITE_SUPABASE_KEY ?? "sb_publishable_XgV-Tm0IkcRSsKEixGZuaA_7-zgduFp";
 export const AKUN_AKTIF = Boolean(SUPABASE_URL && SUPABASE_KEY);
 
 export interface Sesi {
@@ -52,7 +53,8 @@ async function panggil(path: string, init: RequestInit & { token?: string } = {}
   try {
     return await fetch(`${SUPABASE_URL}${path}`, {
       ...rest,
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token ?? SUPABASE_KEY}`, "Content-Type": "application/json", ...headers },
+      // Kunci publishable hanya boleh di header apikey; Authorization hanya berisi token murid yang sudah masuk.
+      headers: { apikey: SUPABASE_KEY, ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json", ...headers },
     });
   } catch {
     throw new AkunError("jaringan");
