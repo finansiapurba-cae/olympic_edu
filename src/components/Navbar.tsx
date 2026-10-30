@@ -12,7 +12,7 @@ export default function Navbar({
   nama: string;
   onNama: (v: string) => void;
   /** bila murid masuk dengan akun: nama tidak diketik lagi, diganti tombol keluar */
-  akun?: { username: string; onKeluar: () => void };
+  akun?: { username: string; onKeluar: () => void; onMasukan: () => void };
   halaman: Halaman | "latihan";
   onPindah: (h: Halaman) => void;
 }) {
@@ -44,6 +44,11 @@ export default function Navbar({
         <nav className="flex items-center gap-1" aria-label="Menu">
           {link("beranda", t.menuLatihan)}
           {link("statistik", t.menuStatistik)}
+          {akun && (
+            <button type="button" onClick={akun.onMasukan} className="rounded-lg px-3 py-1.5 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white">
+              💬 {t.masukanTombol}
+            </button>
+          )}
         </nav>
         <div className="ml-auto flex w-full flex-wrap items-center gap-3 sm:w-auto">
           <div className="flex rounded-lg bg-white/10 p-0.5" role="group" aria-label={t.pilihBahasa}>

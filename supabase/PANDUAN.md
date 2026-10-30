@@ -1,17 +1,26 @@
-# Student accounts (username + password) with Supabase
+# Student accounts: created by the admin only
 
-1. Sign up at https://supabase.com (free) and click **New project**. Pick a name ("olympic-edu"), a database password (save it), and the region **Southeast Asia (Singapore)**.
-2. **SQL Editor → New query**: paste `supabase/setup.sql`, click **Run**.
-3. **Authentication → Sign In / Providers → Email**: turn **off** "Confirm email", then **Save**.
-   (Students sign in with a username, so there is no real email to confirm.)
-4. **Project Settings → API** (or the **Connect** button): copy the **Project URL** and the **anon / publishable key**.
-   Never share the `service_role` / secret key.
-5. Send both to Claude, or add them in Netlify → Environment variables as `VITE_SUPABASE_URL` and `VITE_SUPABASE_KEY`, then redeploy.
+Only the admin creates accounts (for paying students or schools). The website has no public sign-up.
 
-## Seeing students
-- **Authentication → Users**: every account (shown as `username@siswa.olympicedu.app`).
-- **Table Editor → progres**: one row per student with name, grade, score, answered, correct, last update.
+## One-time setup
+1. **SQL Editor → New query**: paste `supabase/setup.sql`, click **Run** (creates the `progres` and `masukan` tables).
+2. **Authentication → Sign In / Providers → User Signups**:
+   - **Allow new users to sign up: OFF**, so nobody can create an account except you.
+   - **Confirm email: OFF**.
+   - **Save changes**.
 
-## Forgotten password
-Authentication → Users → the student → **Delete user**, then the student signs up again with the same username.
-(This also deletes that student's saved progress.)
+## Creating an account for a student
+1. **Authentication → Users → Add user → Create new user**.
+2. Email: `USERNAME@siswa.olympicedu.app`, for example `budi.4a@siswa.olympicedu.app`.
+   The username may use lowercase letters, numbers, dots and underscores (3–20 characters).
+3. Password: at least 6 characters.
+4. Tick **Auto Confirm User**, then **Create user**.
+5. Give the student the **username** (`budi.4a`) and the **password**.
+   On their first sign-in they type their name and grade once.
+
+## Daily use
+- **Table Editor → progres**: each student's name, grade, score, answered, correct, last update.
+- **Table Editor → masukan**: feedback and reported questions from students.
+- **Forgotten password**: there is no email, so "Send password recovery" does not help. Delete the user and create it again
+  with the same username (their progress is deleted too), or ask Claude to add a teacher "reset password" tool.
+- **Ending a subscription**: Users → the student → **Delete user**.

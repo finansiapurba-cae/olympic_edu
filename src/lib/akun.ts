@@ -17,7 +17,7 @@ export interface Sesi {
   kelas: Kelas;
 }
 
-export type GalatAkun = "formatUsername" | "sandiPendek" | "usernameDipakai" | "salahMasuk" | "jaringan" | "konfirmasiEmail" | "lain";
+export type GalatAkun = "salahMasuk" | "jaringan" | "konfirmasiEmail" | "lain";
 export class AkunError extends Error {
   constructor(public kode: GalatAkun) {
     super(kode);
@@ -75,23 +75,14 @@ function sesiDari(data: any): Sesi {
   };
 }
 
-export async function daftar(username: string, sandi: string, nama: string, kelas: Kelas): Promise<Sesi> {
-  const u = rapikanUsername(username);
-  if (!usernameSah(u)) throw new AkunError("formatUsername");
-  if (sandi.length < 6) throw new AkunError("sandiPendek");
-  const r = await panggil("/auth/v1/signup", { method: "POST", body: JSON.stringify({ email: emailDari(u), password: sandi, data: { username: u, nama: nama.trim(), kelas } }) });
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) {
-    const pesan = `${data.code ?? ""} ${data.error_code ?? ""} ${data.msg ?? data.message ?? ""}`;
-    if (/already|exists|registered/i.test(pesan)) throw new AkunError("usernameDipakai");
-    if (/password/i.test(pesan)) throw new AkunError("sandiPendek");
-    throw new AkunError("lain");
-  }
-  // Bila "Confirm email" masih aktif di Supabase, pendaftaran tidak langsung memberi sesi.
-  if (!data.access_token) throw new AkunError("konfirmasiEmail");
-  const s = sesiDari(data);
-  simpanSesi(s);
-  return s;
+/** Akun dibuat oleh admin di Supabase; saat pertama masuk murid melengkapi nama dan kelasnya sendiri. */
+export async function simpanProfil(s: Sesi, nama: string, kelas: Kelas): Promise<Sesi> {
+  const sesi = await sesiSegar(s);
+  const r = await panggil("/auth/v1/user", { method: "PUT", token: sesi.token, body: JSON.stringify({ data: { username: sesi.username, nama: nama.trim(), kelas } }) });
+  if (!r.ok) throw new AkunError(r.status === 401 ? "salahMasuk" : "jaringan");
+  const baru = { ...sesi, nama: nama.trim(), kelas };
+  simpanSesi(baru);
+  return baru;
 }
 
 export async function masuk(username: string, sandi: string): Promise<Sesi> {
@@ -140,6 +131,32 @@ export async function simpanProgresAkun(s: Sesi, p: Progres): Promise<Sesi> {
     keepalive: body.length < 60_000,
     headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
     body,
+  });
+  if (!r.ok) throw new AkunError(r.status === 401 ? "salahMasuk" : "jaringan");
+  return sesi;
+}
+
+export type JenisMasukan = "saran" | "masalah" | "soal" | "lainnya";
+
+/** Masukan murid disimpan di tabel "masukan"; murid hanya bisa mengirim, admin membacanya di Supabase. */
+export async function kirimMasukan(s: Sesi, isi: { jenis: JenisMasukan; nilai: number | null; pesan: string; soalId?: string; halaman: string; bahasa: string }) {
+  const sesi = await sesiSegar(s);
+  const r = await panggil("/rest/v1/masukan", {
+    method: "POST",
+    token: sesi.token,
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify({
+      user_id: sesi.id,
+      username: sesi.username,
+      nama: sesi.nama,
+      kelas: sesi.kelas,
+      jenis: isi.jenis,
+      nilai: isi.nilai,
+      pesan: isi.pesan.trim().slice(0, 2000),
+      soal_id: isi.soalId ?? null,
+      halaman: isi.halaman,
+      bahasa: isi.bahasa,
+    }),
   });
   if (!r.ok) throw new AkunError(r.status === 401 ? "salahMasuk" : "jaringan");
   return sesi;

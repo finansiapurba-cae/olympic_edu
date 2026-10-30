@@ -4,7 +4,8 @@ import IkonBadge from "./components/IkonBadge";
 import Beranda from "./pages/Beranda";
 import Latihan from "./pages/Latihan";
 import Statistik from "./pages/Statistik";
-import Masuk from "./pages/Masuk";
+import Masuk, { LengkapiProfil } from "./pages/Masuk";
+import Masukan from "./components/Masukan";
 import { AKUN_AKTIF, AkunError, ambilProgresAkun, keluar, muatSesi, simpanProgresAkun, type Sesi } from "./lib/akun";
 import { periksaBadge, type Badge } from "./lib/badge";
 import { PenyediaBahasa, useBahasa } from "./i18n";
@@ -34,7 +35,8 @@ function Gerbang() {
   const muatDariServer = useCallback(async (s: Sesi, lokal: Progres) => {
     try {
       const { sesi: segar, progres: server } = await ambilProgresAkun(s);
-      setSesi(segar);
+      // Nama yang baru saja diisi di "Lengkapi profil" tidak boleh tertimpa.
+      setSesi((lama) => (lama && lama.nama ? { ...segar, nama: lama.nama, kelas: lama.kelas } : segar));
       const pakai = server && banyakKerja(server) >= banyakKerja(lokal) ? { ...lokal, ...server } : lokal;
       setAwal({ ...pakai, nama: segar.nama });
     } catch (e) {
@@ -68,6 +70,22 @@ function Gerbang() {
         }}
       />
     );
+  if (!sesi.nama)
+    return (
+      <LengkapiProfil
+        sesi={sesi}
+        onSelesai={(s) => {
+          setSesi(s);
+          setAwal((p) => (p ? { ...p, nama: s.nama } : p));
+        }}
+        onKeluar={() => {
+          keluar(sesi);
+          sudahCek.current = false;
+          setSesi(null);
+          setAwal(null);
+        }}
+      />
+    );
   if (!awal)
     return (
       <div className="grid min-h-screen place-items-center bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#0EA5E9] text-lg font-bold text-white">
@@ -97,12 +115,17 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
   const { t } = useBahasa();
   const [progres, setProgres] = useState<Progres>(() => awal ?? muatProgres());
   const [gagalSimpan, setGagalSimpan] = useState(false);
+  const [masukan, setMasukan] = useState<{ soalId?: string } | null>(null);
   const [halaman, setHalaman] = useState<Halaman>("beranda");
   const [pengaturan, setPengaturan] = useState<PengaturanSesi>({ kelas: 1, tingkat: "campuran", mode: "latihan", durasiMenit: 20 });
   const [kunciSesi, setKunciSesi] = useState(0);
   const [badgeBaru, setBadgeBaru] = useState<Badge[]>([]);
 
   const ubah = useCallback((fn: (p: Progres) => Progres) => setProgres(fn), []);
+  // Nama di progres selalu mengikuti nama akun.
+  useEffect(() => {
+    if (sesi?.nama) setProgres((p) => (p.nama === sesi.nama ? p : { ...p, nama: sesi.nama }));
+  }, [sesi?.nama]);
 
   // Simpan setiap perubahan dan periksa badge baru.
   useEffect(() => {
@@ -178,7 +201,7 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
       <Navbar
         nama={progres.nama}
         onNama={(nama) => ubah((p) => ({ ...p, nama }))}
-        akun={sesi ? { username: sesi.username, onKeluar: () => { kirimKeServer(); onKeluar?.(); } } : undefined}
+        akun={sesi ? { username: sesi.username, onKeluar: () => { kirimKeServer(); onKeluar?.(); }, onMasukan: () => setMasukan({}) } : undefined}
         halaman={halaman}
         onPindah={pindah}
       />
@@ -194,6 +217,7 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
           onPengaturan={mulai}
           keBeranda={() => pindah("beranda")}
           keStatistik={() => pindah("statistik")}
+          onLaporkan={sesi ? (soalId) => setMasukan({ soalId }) : undefined}
         />
       )}
       {halaman === "statistik" && <Statistik progres={progres} onReset={() => setProgres(progresBaru(progres.nama))} keBeranda={() => pindah("beranda")} />}
@@ -201,6 +225,8 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
       <footer className="px-4 pb-10 pt-4 text-center text-xs text-redup">
         <span className="font-semibold text-tinta">Olympic Edu</span> · olympicedu.netlify.app · {SHEET_URL ? t.footerKirim : t.footer}
       </footer>
+
+      {masukan && sesi && <Masukan sesi={sesi} soalId={masukan.soalId} halaman={halaman} onTutup={() => setMasukan(null)} />}
 
       {badgeBaru[0] && (
         <div

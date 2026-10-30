@@ -29,6 +29,7 @@ export default function Latihan({
   onPengaturan,
   keBeranda,
   keStatistik,
+  onLaporkan,
 }: {
   pengaturan: PengaturanSesi;
   progres: Progres;
@@ -37,6 +38,8 @@ export default function Latihan({
   onPengaturan: (s: PengaturanSesi) => void;
   keBeranda: () => void;
   keStatistik: () => void;
+  /** membuka jendela masukan untuk melaporkan soal ini (hanya bila murid masuk dengan akun) */
+  onLaporkan?: (soalId: string) => void;
 }) {
   const { t, bahasa } = useBahasa();
   const { kelas, tingkat, mode, durasiMenit } = pengaturan;
@@ -403,6 +406,13 @@ export default function Latihan({
         )}
       </div>
       <p className="mt-4 hidden text-center text-xs text-redup sm:block">{t.tips}</p>
+      {onLaporkan && (
+        <p className="mt-3 text-center">
+          <button type="button" onClick={() => onLaporkan(soal.id)} className="text-xs font-semibold text-redup underline-offset-2 hover:text-utama hover:underline">
+            🚩 {t.laporkanSoal}
+          </button>
+        </p>
+      )}
 
       {ringkasan && (
         <Dialog
