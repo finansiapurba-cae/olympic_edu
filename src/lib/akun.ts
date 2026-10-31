@@ -27,7 +27,8 @@ export class AkunError extends Error {
 const KUNCI_SESI = "kms-sesi";
 // Supabase memerlukan alamat email; username diubah menjadi alamat yang tidak pernah dikirimi email.
 const emailDari = (username: string) => `${username}@siswa.olympicedu.app`;
-export const rapikanUsername = (u: string) => u.trim().toLowerCase();
+// Bila yang diketik alamat lengkap (budi@siswa.olympicedu.app), cukup ambil bagian username-nya.
+export const rapikanUsername = (u: string) => u.trim().toLowerCase().replace(/@siswa\.olympicedu\.app$/, "");
 export const usernameSah = (u: string) => /^[a-z0-9._]{3,20}$/.test(u);
 
 function simpanSesi(s: Sesi | null) {
