@@ -6,14 +6,15 @@ import Latihan from "./pages/Latihan";
 import Statistik from "./pages/Statistik";
 import Masuk, { LengkapiProfil } from "./pages/Masuk";
 import Masukan from "./components/Masukan";
-import { AKUN_AKTIF, AkunError, ambilProgresAkun, keluar, muatSesi, simpanProgresAkun, type Sesi } from "./lib/akun";
+import Guru from "./pages/Guru";
+import { AKUN_AKTIF, AkunError, ambilProgresAkun, cekGuru, keluar, kirimJawaban, muatSesi, simpanProgresAkun, type Sesi } from "./lib/akun";
 import { periksaBadge, type Badge } from "./lib/badge";
 import { PenyediaBahasa, useBahasa } from "./i18n";
 import { muatProgres, progresBaru, simpanProgres } from "./lib/progres";
 import { SHEET_URL } from "./lib/kirimHasil";
 import type { PengaturanSesi, Progres } from "./types";
 
-type Halaman = "beranda" | "latihan" | "statistik";
+type Halaman = "beranda" | "latihan" | "statistik" | "guru";
 
 export default function App() {
   return (
@@ -117,6 +118,18 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
   const [gagalSimpan, setGagalSimpan] = useState(false);
   const [masukan, setMasukan] = useState<{ soalId?: string } | null>(null);
   const [halaman, setHalaman] = useState<Halaman>("beranda");
+  // Menu Guru hanya muncul untuk akun yang terdaftar di tabel "guru" di Supabase.
+  const [guru, setGuru] = useState(false);
+  const idSesi = sesi?.id;
+  useEffect(() => {
+    if (!sesi) return;
+    let batal = false;
+    cekGuru(sesi).then((ya) => !batal && setGuru(ya));
+    return () => {
+      batal = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idSesi]);
   const [pengaturan, setPengaturan] = useState<PengaturanSesi>({ kelas: 1, tingkat: "campuran", mode: "latihan", durasiMenit: 20 });
   const [kunciSesi, setKunciSesi] = useState(0);
   const [badgeBaru, setBadgeBaru] = useState<Badge[]>([]);
@@ -204,6 +217,7 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
         akun={sesi ? { username: sesi.username, onKeluar: () => { kirimKeServer(); onKeluar?.(); }, onMasukan: () => setMasukan({}) } : undefined}
         halaman={halaman}
         onPindah={pindah}
+        guru={guru}
       />
       {gagalSimpan && <p className="bg-[#FEF3C7] px-4 py-2 text-center text-sm font-semibold text-[#92400E]">{t.akunGagalSimpan}</p>}
       {halaman === "beranda" && <Beranda progres={progres} awal={pengaturan} onMulai={mulai} />}
@@ -218,8 +232,26 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
           keBeranda={() => pindah("beranda")}
           keStatistik={() => pindah("statistik")}
           onLaporkan={sesi ? (soalId) => setMasukan({ soalId }) : undefined}
+          onJawab={
+            sesi
+              ? (soal, pilihan, benar) =>
+                  kirimJawaban(sesi, {
+                    soal_id: soal.id,
+                    soal_kelas: soal.kelas,
+                    paket: soal.paket ?? null,
+                    topik: soal.topik.id,
+                    tingkat: soal.tingkat,
+                    mode: pengaturan.mode,
+                    pilihan,
+                    kunci: soal.kunci,
+                    benar,
+                    waktu: new Date().toISOString(),
+                  })
+              : undefined
+          }
         />
       )}
+      {halaman === "guru" && guru && sesi && <Guru sesi={sesi} onSesi={(s) => onSesi?.(s)} />}
       {halaman === "statistik" && <Statistik progres={progres} onReset={() => setProgres(progresBaru(progres.nama))} keBeranda={() => pindah("beranda")} />}
 
       <footer className="px-4 pb-10 pt-4 text-center text-xs text-redup">

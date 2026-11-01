@@ -1,6 +1,6 @@
 import { BAHASA, useBahasa } from "../i18n";
 
-type Halaman = "beranda" | "statistik";
+type Halaman = "beranda" | "statistik" | "guru";
 
 export default function Navbar({
   nama,
@@ -8,6 +8,7 @@ export default function Navbar({
   akun,
   halaman,
   onPindah,
+  guru = false,
 }: {
   nama: string;
   onNama: (v: string) => void;
@@ -15,6 +16,8 @@ export default function Navbar({
   akun?: { username: string; onKeluar: () => void; onMasukan: () => void };
   halaman: Halaman | "latihan";
   onPindah: (h: Halaman) => void;
+  /** akun guru melihat menu dashboard guru */
+  guru?: boolean;
 }) {
   const { t, bahasa, setBahasa } = useBahasa();
   const link = (h: Halaman, label: string) => (
@@ -44,6 +47,7 @@ export default function Navbar({
         <nav className="flex items-center gap-1" aria-label="Menu">
           {link("beranda", t.menuLatihan)}
           {link("statistik", t.menuStatistik)}
+          {guru && link("guru", `👩‍🏫 ${t.menuGuru}`)}
           {akun && (
             <button type="button" onClick={akun.onMasukan} className="rounded-lg px-3 py-1.5 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white">
               💬 {t.masukanTombol}

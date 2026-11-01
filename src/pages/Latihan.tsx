@@ -30,6 +30,7 @@ export default function Latihan({
   keBeranda,
   keStatistik,
   onLaporkan,
+  onJawab,
 }: {
   pengaturan: PengaturanSesi;
   progres: Progres;
@@ -40,6 +41,8 @@ export default function Latihan({
   keStatistik: () => void;
   /** membuka jendela masukan untuk melaporkan soal ini (hanya bila murid masuk dengan akun) */
   onLaporkan?: (soalId: string) => void;
+  /** dipanggil setiap jawaban diperiksa, untuk catatan dashboard guru */
+  onJawab?: (soal: Soal, pilihan: Huruf, benar: boolean) => void;
 }) {
   const { t, bahasa } = useBahasa();
   const { kelas, tingkat, mode, durasiMenit } = pengaturan;
@@ -140,6 +143,7 @@ export default function Latihan({
     if (!soal || !pilihan || diperiksa || !pool) return;
     const benar = pilihan === soal.kunci;
     setDiperiksa(true);
+    onJawab?.(soal, pilihan, benar);
     setSesi((s) => ({
       ...s,
       dijawab: s.dijawab + 1,
@@ -158,7 +162,7 @@ export default function Latihan({
       sudah.add(soal.id);
       if (sudah.size >= ukuran) setPesan(t.tuntas(ukuran));
     }
-  }, [soal, pilihan, diperiksa, pool, ubah, mode, kelompok, progres.sudahDikerjakan, t]);
+  }, [soal, pilihan, diperiksa, pool, ubah, mode, kelompok, progres.sudahDikerjakan, t, onJawab]);
 
   const lanjut = useCallback(
     (tanpaRingkasan = false) => {

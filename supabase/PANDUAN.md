@@ -24,3 +24,9 @@ Only the admin creates accounts (for paying students or schools). The website ha
 - **Forgotten password**: there is no email, so "Send password recovery" does not help. Delete the user and create it again
   with the same username (their progress is deleted too), or ask Claude to add a teacher "reset password" tool.
 - **Ending a subscription**: Users → the student → **Delete user**.
+
+## Teacher dashboard
+1. Create the teacher account: Authentication → Users → Add user → `guru@siswa.olympicedu.app` + password, tick **Auto Confirm User**.
+2. Run the "Dashboard guru" part of `supabase/setup.sql` (it adds `guru@siswa.olympicedu.app` to the teacher list).
+   To make another account a teacher: `insert into public.guru (email) values ('USERNAME@siswa.olympicedu.app');`
+3. Sign in on the website as `guru`; a **👩‍🏫 Guru** menu appears: students, their wrong answers, often-wrong questions, feedback, and **Download Excel**.

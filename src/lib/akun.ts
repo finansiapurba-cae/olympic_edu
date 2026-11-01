@@ -162,3 +162,123 @@ export async function kirimMasukan(s: Sesi, isi: { jenis: JenisMasukan; nilai: n
   if (!r.ok) throw new AkunError(r.status === 401 ? "salahMasuk" : "jaringan");
   return sesi;
 }
+
+/* ---------------- Catatan jawaban per soal (untuk dashboard guru) ---------------- */
+
+export interface CatatanJawaban {
+  soal_id: string;
+  soal_kelas: number;
+  paket: string | null;
+  topik: string;
+  tingkat: string;
+  mode: string;
+  pilihan: string;
+  kunci: string;
+  benar: boolean;
+  waktu: string;
+}
+export interface BarisJawaban extends CatatanJawaban {
+  user_id: string;
+  username: string;
+  nama: string | null;
+  kelas: number | null;
+}
+
+const KUNCI_ANTRIAN = "kms-antrian-jawaban";
+function bacaAntrian(): BarisJawaban[] {
+  try {
+    return JSON.parse(localStorage.getItem(KUNCI_ANTRIAN) || "[]");
+  } catch {
+    return [];
+  }
+}
+function tulisAntrian(a: BarisJawaban[]) {
+  try {
+    // Batasi agar penyimpanan tidak penuh bila lama tanpa internet.
+    localStorage.setItem(KUNCI_ANTRIAN, JSON.stringify(a.slice(-500)));
+  } catch {
+    /* abaikan */
+  }
+}
+
+let mengirim = false;
+/** Setiap jawaban yang diperiksa dikirim ke tabel "jawaban". Bila gagal (tanpa internet), disimpan dan dikirim ulang nanti. */
+export async function kirimJawaban(s: Sesi, c: CatatanJawaban) {
+  const antrian = bacaAntrian();
+  antrian.push({ ...c, user_id: s.id, username: s.username, nama: s.nama, kelas: s.kelas });
+  tulisAntrian(antrian);
+  if (mengirim) return;
+  mengirim = true;
+  try {
+    const sesi = await sesiSegar(s);
+    const kirim = bacaAntrian().filter((b) => b.user_id === sesi.id);
+    if (!kirim.length) return;
+    const r = await panggil("/rest/v1/jawaban", { method: "POST", token: sesi.token, keepalive: true, headers: { Prefer: "return=minimal" }, body: JSON.stringify(kirim) });
+    if (r.ok) {
+      const terkirim = new Set(kirim.map((b) => `${b.waktu}|${b.soal_id}`));
+      tulisAntrian(bacaAntrian().filter((b) => !terkirim.has(`${b.waktu}|${b.soal_id}`)));
+    }
+  } catch {
+    /* coba lagi pada jawaban berikutnya */
+  } finally {
+    mengirim = false;
+  }
+}
+
+/** Apakah akun ini guru? Ditentukan oleh tabel "guru" di Supabase (lihat supabase/setup.sql). */
+export async function cekGuru(s: Sesi): Promise<boolean> {
+  try {
+    const sesi = await sesiSegar(s);
+    const r = await panggil("/rest/v1/rpc/is_guru", { method: "POST", token: sesi.token, body: "{}" });
+    return r.ok && (await r.json()) === true;
+  } catch {
+    return false;
+  }
+}
+
+export interface BarisProgres {
+  user_id: string;
+  username: string;
+  nama: string | null;
+  kelas: number | null;
+  skor: number | null;
+  dijawab: number | null;
+  benar: number | null;
+  diperbarui: string;
+}
+export interface BarisMasukan {
+  id: number;
+  dibuat: string;
+  username: string | null;
+  nama: string | null;
+  kelas: number | null;
+  jenis: string;
+  nilai: number | null;
+  pesan: string;
+  soal_id: string | null;
+}
+
+/** Ambil semua baris (Supabase memberi paling banyak 1.000 baris per permintaan). */
+async function ambilSemua<T>(s: Sesi, path: string): Promise<T[]> {
+  const hasil: T[] = [];
+  for (let dari = 0; dari < 100_000; dari += 1000) {
+    const r = await panggil(path, { token: s.token, headers: { Range: `${dari}-${dari + 999}`, "Range-Unit": "items" } });
+    if (r.status === 401) throw new AkunError("salahMasuk");
+    if (!r.ok && r.status !== 206) throw new AkunError("jaringan");
+    const bagian = (await r.json()) as T[];
+    hasil.push(...bagian);
+    if (bagian.length < 1000) break;
+  }
+  return hasil;
+}
+
+export async function ambilDataGuru(s: Sesi, sejak: string | null) {
+  const sesi = await sesiSegar(s);
+  const filter = sejak ? `&waktu=gte.${encodeURIComponent(sejak)}` : "";
+  const [murid, jawaban, masukan] = await Promise.all([
+    ambilSemua<BarisProgres>(sesi, "/rest/v1/progres?select=user_id,username,nama,kelas,skor,dijawab,benar,diperbarui&order=nama.asc"),
+    ambilSemua<BarisJawaban>(sesi, `/rest/v1/jawaban?select=user_id,username,nama,kelas,soal_id,soal_kelas,paket,topik,tingkat,mode,pilihan,kunci,benar,waktu&order=waktu.desc${filter}`),
+    ambilSemua<BarisMasukan>(sesi, "/rest/v1/masukan?select=id,dibuat,username,nama,kelas,jenis,nilai,pesan,soal_id&order=dibuat.desc"),
+  ]);
+  return { sesi, murid, jawaban, masukan };
+}
