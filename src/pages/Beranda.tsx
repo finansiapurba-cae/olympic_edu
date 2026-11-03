@@ -3,13 +3,20 @@ import Lipat from "../components/Lipat";
 import Tombol from "../components/Tombol";
 import BarKemajuan from "../components/BarKemajuan";
 import SampulLebah from "../components/SampulLebah";
+import Ikon, { type NamaIkon } from "../components/Ikon";
 import { meta, KATEGORI_OSN } from "../data/bank";
 import { useBahasa } from "../i18n";
-import { kunciKelompok, salahUntukKelas } from "../lib/progres";
+import { akurasi, kunciKelompok, salahUntukKelas } from "../lib/progres";
 import type { KategoriPaket, Kelas, PengaturanSesi, PilihanTingkat, Progres } from "../types";
 
 const KATEGORI: KategoriPaket[] = ["indonesia", "internasional", "standar"];
-const IKON_KATEGORI: Record<KategoriPaket, string> = { indonesia: "🇮🇩", internasional: "🌏", standar: "📘" };
+const IKON_KATEGORI: Record<KategoriPaket, NamaIkon> = { indonesia: "piala", internasional: "bola", standar: "buku" };
+// Warna petak kategori, sama dengan desain aplikasi: madu, biru langit, hijau.
+const WARNA_KATEGORI: Record<KategoriPaket, [string, string]> = {
+  indonesia: ["bg-[#FFF4D6] text-[#92400E]", "ring-[#F2B53A]"],
+  internasional: ["bg-[#E0F2FE] text-[#0369A1]", "ring-[#0EA5E9]"],
+  standar: ["bg-[#DCFCE7] text-[#15803D]", "ring-[#22C55E]"],
+};
 
 const KELAS: Kelas[] = [1, 2, 3, 4, 5, 6];
 const TINGKAT: PilihanTingkat[] = ["mudah", "sedang", "sulit", "campuran"];
@@ -19,7 +26,7 @@ const TOTAL_PAKET = meta.paket.reduce((s, p) => s + p.total, 0);
 
 const gulirKe = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-export default function Beranda({ progres, awal, onMulai }: { progres: Progres; awal: PengaturanSesi; onMulai: (s: PengaturanSesi) => void }) {
+export default function Beranda({ progres, awal, onMulai, onMasukan }: { progres: Progres; awal: PengaturanSesi; onMulai: (s: PengaturanSesi) => void; onMasukan?: () => void }) {
   const { t, bahasa, locale } = useBahasa();
   const [kelas, setKelas] = useState<Kelas>(awal.kelas);
   const [kategori, setKategori] = useState<KategoriPaket>("indonesia");
@@ -38,53 +45,113 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
 
   const mulai = (md: PengaturanSesi["mode"], paket?: string) => onMulai({ kelas, tingkat, mode: md, durasiMenit: durasi, paket });
 
+  // Paket yang sedang dikerjakan (sudah mulai, belum selesai), yang terakhir dibuka lebih dulu.
+  const terakhir = progres.riwayat.find((r) => r.mode === "paket")?.paket;
+  const belumSelesai = meta.paket.filter((p) => {
+    const n = progres.sudahDikerjakan[`paket-${p.id}`]?.length ?? 0;
+    return n > 0 && n < p.total;
+  });
+  const lanjutan = belumSelesai.find((p) => p.id === terakhir) ?? belumSelesai[0];
+  const nLanjutan = lanjutan ? progres.sudahDikerjakan[`paket-${lanjutan.id}`]?.length ?? 0 : 0;
+
   return (
     <>
-      <SampulLebah onMulai={() => gulirKe("pilih-latihan")} onPaket={() => gulirKe("paket-olimpiade")} jumlahSoal={TOTAL_BANK} jumlahPaket={TOTAL_PAKET} />
-      <main className="mx-auto w-full max-w-3xl px-4 pb-8 pt-6 sm:px-6 sm:pb-12">
-        <section id="pilih-latihan" className="scroll-mt-4 rounded-3xl bg-white p-6 shadow-kartu sm:p-10">
-          <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.eyebrow}</p>
-          <h2 className="mt-3 text-balance text-3xl font-extrabold leading-tight text-tinta sm:text-4xl">{t.judul}</h2>
-          <p className="mt-3 max-w-prose text-base leading-relaxed text-redup">{t.intro}</p>
+      {/* HP: sapaan ala aplikasi. Layar lebar: sampul lebah. */}
+      <section className="bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#0EA5E9] px-4 pb-16 text-white sm:hidden" style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 20px)" }}>
+        <div className="mb-4 flex items-center gap-2.5">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#0F1B33] text-xl font-extrabold text-[#F2B53A]" aria-hidden="true">
+            Σ
+          </span>
+          <span className="text-base font-extrabold tracking-tight">Olympic Edu</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-[#DBEAFE]">{t.sapaHalo}</p>
+            <p className="truncate text-xl font-extrabold">{progres.nama || "Olympic Edu"}</p>
+          </div>
+          {onMasukan && (
+            <button type="button" onClick={onMasukan} aria-label={t.masukanJudul} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/15">
+              <Ikon nama="pesan" className="h-[22px] w-[22px]" />
+            </button>
+          )}
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-2.5">
+          {[
+            [String(progres.skor), t.poinMadu],
+            [String(progres.streak), t.hariBeruntun],
+            [`${akurasi(progres.totalBenar, progres.totalDijawab)}%`, t.ketepatanKecil],
+          ].map(([v, k]) => (
+            <div key={k} className="rounded-2xl bg-white/15 p-3">
+              <p className="text-2xl font-extrabold tabular-nums">{v}</p>
+              <p className="text-xs text-[#DBEAFE]">{k}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <div className="hidden sm:block">
+        <SampulLebah onMulai={() => gulirKe("pilih-latihan")} onPaket={() => gulirKe("paket-olimpiade")} jumlahSoal={TOTAL_BANK} jumlahPaket={TOTAL_PAKET} />
+      </div>
+      <main className="mx-auto w-full max-w-3xl px-4 pb-8 pt-0 sm:px-6 sm:pb-12 sm:pt-6">
+        {lanjutan && (
+          <section className="relative z-10 -mt-11 mb-5 grid gap-3 rounded-3xl bg-white p-5 shadow-kartu sm:mt-0">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-[#B7791F]">{t.lanjutkanLabel}</p>
+                <p className="mt-0.5 text-lg font-extrabold text-tinta">{lanjutan.judul[bahasa]}</p>
+              </div>
+              <span className="shrink-0 text-sm font-bold tabular-nums text-redup">
+                {nLanjutan}/{lanjutan.total}
+              </span>
+            </div>
+            <div className="h-2.5 overflow-hidden rounded-full bg-[#E2E8F0]">
+              <div className="h-full rounded-full bg-[#F2B53A]" style={{ width: `${(nLanjutan / lanjutan.total) * 100}%` }} />
+            </div>
+            <Tombol onClick={() => mulai("paket", lanjutan.id)} className="w-full">
+              {t.lanjutKeSoal(nLanjutan + 1)}
+            </Tombol>
+          </section>
+        )}
+        <section id="pilih-latihan" className={`scroll-mt-4 rounded-3xl bg-white p-5 shadow-kartu sm:p-10 ${lanjutan ? "" : "relative z-10 -mt-11 sm:mt-0"}`}>
+          <p className="hidden bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent sm:inline-block">{t.eyebrow}</p>
+          <h2 className="text-balance text-xl font-extrabold leading-tight text-tinta sm:mt-3 sm:text-4xl">
+            <span className="sm:hidden">{t.latihanAcak}</span>
+            <span className="hidden sm:inline">{t.judul}</span>
+          </h2>
+          <p className="mt-3 hidden max-w-prose text-base leading-relaxed text-redup sm:block">{t.intro}</p>
 
-          <div className="mt-8 grid gap-6">
-            <div>
-              <label htmlFor="pilih-kelas" className="mb-2 block text-sm font-semibold text-tinta">
-                {t.kelas}
-              </label>
-              <div className="relative">
-                <select
-                  id="pilih-kelas"
-                  value={kelas}
-                  onChange={(e) => setKelas(Number(e.target.value) as Kelas)}
-                  className="w-full appearance-none rounded-xl border border-garis bg-halaman px-4 py-3.5 pr-12 text-base font-semibold text-tinta focus:border-utama focus:outline-none focus:ring-4 focus:ring-utama/15"
-                >
-                  {KELAS.map((k) => (
-                    <option key={k} value={k}>
-                      {t.kelasN(k)} · {t.nSoal(meta.kelas[k].total)}
-                    </option>
-                  ))}
-                </select>
-                <svg className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-redup" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
+          <div className="mt-5 grid gap-6 sm:mt-8">
+            <fieldset>
+              <legend className="mb-2 block text-sm font-semibold text-tinta">{t.kelas}</legend>
+              <div className="grid grid-cols-6 gap-2">
+                {KELAS.map((k) => (
+                  <label
+                    key={k}
+                    title={`${t.kelasN(k)} · ${t.nSoal(meta.kelas[k].total)}`}
+                    className={`grid h-12 cursor-pointer place-items-center rounded-2xl text-lg font-extrabold transition-colors has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-utama/25 ${
+                      kelas === k ? "bg-[#1E40AF] text-white shadow-[0_8px_18px_-10px_rgba(30,64,175,.9)]" : "border-[1.5px] border-[#CBD5E1] bg-white text-tinta hover:border-utama/50"
+                    }`}
+                  >
+                    <input type="radio" name="kelas" value={k} checked={kelas === k} onChange={() => setKelas(k)} className="sr-only" />
+                    {k}
+                  </label>
+                ))}
               </div>
               <p className="mt-2 text-sm text-redup">{t.tersedia(m.total, kelas, m.tingkat.mudah ?? 0, m.tingkat.sedang ?? 0, m.tingkat.sulit ?? 0)}</p>
-            </div>
+            </fieldset>
 
             <fieldset>
               <legend className="mb-2 block text-sm font-semibold text-tinta">{t.tingkatKesulitan}</legend>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <div className="flex flex-wrap gap-2">
                 {TINGKAT.map((x) => (
                   <label
                     key={x}
-                    className={`cursor-pointer rounded-xl border px-3 py-2.5 text-center transition-colors has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-utama/20 ${
-                      tingkat === x ? "border-utama bg-gradient-to-br from-utama-muda to-white text-utama shadow-[0_6px_16px_-10px_rgba(33,74,155,.8)]" : "border-garis bg-white text-tinta hover:border-utama/40"
+                    className={`flex cursor-pointer items-baseline gap-1.5 rounded-full px-4 py-2 transition-colors has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-utama/20 ${
+                      tingkat === x ? "bg-tinta text-white" : "border-[1.5px] border-[#CBD5E1] bg-white text-tinta hover:border-utama/50"
                     }`}
                   >
                     <input type="radio" name="tingkat" value={x} checked={tingkat === x} onChange={() => setTingkat(x)} className="sr-only" />
-                    <span className="block text-sm font-bold">{t.tingkat[x]}</span>
-                    <span className="block text-xs tabular-nums opacity-80">{t.nSoal(jumlahTingkat(x))}</span>
+                    <span className="text-sm font-bold">{t.tingkat[x]}</span>
+                    <span className="text-xs tabular-nums opacity-70">{jumlahTingkat(x)}</span>
                   </label>
                 ))}
               </div>
@@ -169,11 +236,9 @@ export default function Beranda({ progres, awal, onMulai }: { progres: Progres; 
                   role="tab"
                   aria-selected={kategori === k}
                   onClick={() => setKategori(k)}
-                  className={`flex flex-col items-center gap-0.5 rounded-2xl px-2 py-3 text-center text-sm font-bold transition-colors sm:flex-row sm:justify-center sm:gap-2 ${kategori === k ? "bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] text-white shadow" : "bg-halaman text-tinta hover:bg-[#E0F2FE]"}`}
+                  className={`flex flex-col items-start gap-2 rounded-2xl p-3 text-left text-[13px] font-extrabold leading-tight transition sm:flex-row sm:items-center sm:text-sm ${WARNA_KATEGORI[k][0]} ${kategori === k ? `ring-2 ${WARNA_KATEGORI[k][1]}` : "opacity-80 hover:opacity-100"}`}
                 >
-                  <span className="text-lg" aria-hidden="true">
-                    {IKON_KATEGORI[k]}
-                  </span>
+                  <Ikon nama={IKON_KATEGORI[k]} className="h-6 w-6 shrink-0" />
                   {t.kategoriPaket[k][0]}
                 </button>
               ))}

@@ -1,4 +1,5 @@
 import { BAHASA, useBahasa } from "../i18n";
+import Ikon from "./Ikon";
 
 type Halaman = "beranda" | "statistik" | "guru";
 
@@ -9,6 +10,7 @@ export default function Navbar({
   halaman,
   onPindah,
   guru = false,
+  onProfil,
 }: {
   nama: string;
   onNama: (v: string) => void;
@@ -18,8 +20,11 @@ export default function Navbar({
   onPindah: (h: Halaman) => void;
   /** akun guru melihat menu dashboard guru */
   guru?: boolean;
+  /** HP: ketuk avatar untuk membuka halaman profil */
+  onProfil?: () => void;
 }) {
   const { t, bahasa, setBahasa } = useBahasa();
+  const inisial = (nama || akun?.username || "?").split(/\s+/).map((s) => s[0]).join("").slice(0, 2).toUpperCase();
   const link = (h: Halaman, label: string) => (
     <button
       type="button"
@@ -44,17 +49,24 @@ export default function Navbar({
             <span className="block text-xs font-medium text-white/60">{t.tagline}</span>
           </span>
         </button>
-        <nav className="flex items-center gap-1" aria-label="Menu">
+        {akun && (
+          <button type="button" onClick={onProfil} aria-label={t.menuProfil} className="ml-auto flex items-center gap-2 rounded-full bg-white/15 py-1 pl-1 pr-3 sm:hidden">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-white text-xs font-extrabold text-utama">{inisial}</span>
+            <span className="max-w-[9rem] truncate text-sm font-bold">{nama}</span>
+          </button>
+        )}
+        <nav className={`${akun ? "hidden sm:flex" : "flex"} items-center gap-1`} aria-label="Menu">
           {link("beranda", t.menuLatihan)}
           {link("statistik", t.menuStatistik)}
-          {guru && link("guru", `👩‍🏫 ${t.menuGuru}`)}
+          {guru && link("guru", t.menuGuru)}
           {akun && (
-            <button type="button" onClick={akun.onMasukan} className="rounded-lg px-3 py-1.5 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white">
-              💬 {t.masukanTombol}
+            <button type="button" onClick={akun.onMasukan} className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white">
+              <Ikon nama="pesan" className="h-4 w-4" />
+              {t.masukanTombol}
             </button>
           )}
         </nav>
-        <div className="ml-auto flex w-full flex-wrap items-center gap-3 sm:w-auto">
+        <div className={`${akun ? "hidden sm:flex" : "flex"} ml-auto w-full flex-wrap items-center gap-3 sm:w-auto`}>
           <div className="flex rounded-lg bg-white/10 p-0.5" role="group" aria-label={t.pilihBahasa}>
             {BAHASA.map((b) => (
               <button
@@ -74,9 +86,9 @@ export default function Navbar({
           </div>
           {akun ? (
             <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/15 text-lg" aria-hidden="true">
-                🐝
-              </span>
+              <button type="button" onClick={onProfil} aria-label={t.menuProfil} className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-xs font-extrabold text-utama">
+                {inisial}
+              </button>
               <span className="min-w-0 leading-tight">
                 <span className="block truncate text-sm font-bold">{nama}</span>
                 <span className="block truncate text-xs text-white/65">@{akun.username}</span>

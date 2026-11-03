@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import Tombol from "../components/Tombol";
+import Ikon from "../components/Ikon";
 import { BAHASA, useBahasa } from "../i18n";
 import { AkunError, masuk, simpanProfil, type Sesi } from "../lib/akun";
 import type { Kelas } from "../types";
@@ -7,14 +8,39 @@ import type { Kelas } from "../types";
 // Akun hanya dibuat oleh admin (lihat supabase/PANDUAN.md). Kontak ini ditampilkan untuk yang belum punya akun.
 export const KONTAK_ADMIN = "";
 
-const kolom = "w-full rounded-xl border border-garis bg-white px-4 py-3 text-base text-tinta placeholder:text-redup/70 focus:border-utama focus:outline-none focus:ring-4 focus:ring-utama/15";
+const kolom = "h-[52px] w-full rounded-2xl border-[1.5px] border-[#CBD5E1] bg-white px-4 text-base font-medium text-tinta placeholder:text-redup/70 focus:border-utama focus:outline-none focus:ring-4 focus:ring-utama/15";
 
+function LogoLebah() {
+  return (
+    <div className="relative grid h-32 w-32 place-items-center rounded-[40px] bg-white/15">
+      <svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+        <ellipse cx="34" cy="34" rx="16" ry="11" fill="#E0F2FE" opacity="0.9" transform="rotate(-25 34 34)" />
+        <ellipse cx="60" cy="32" rx="16" ry="11" fill="#E0F2FE" opacity="0.9" transform="rotate(25 60 32)" />
+        <ellipse cx="48" cy="58" rx="26" ry="20" fill="#F2B53A" />
+        <rect x="38" y="39" width="7" height="38" rx="3" fill="#0F1B33" />
+        <rect x="53" y="39" width="7" height="38" rx="3" fill="#0F1B33" />
+        <circle cx="70" cy="54" r="3" fill="#0F1B33" />
+        <path d="M66 63 q4 3 8 0" stroke="#0F1B33" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      </svg>
+      <span className="absolute -right-2 -top-2 grid h-10 w-10 place-items-center rounded-xl bg-[#0F1B33] text-2xl font-extrabold text-[#F2B53A]" aria-hidden="true">
+        Σ
+      </span>
+    </div>
+  );
+}
+
+/** HP: logo di atas latar biru dan formulir di lembar putih bawah. Layar lebar: kartu di tengah. */
 function Bingkai({ children }: { children: ReactNode }) {
   const { t, bahasa, setBahasa } = useBahasa();
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#0EA5E9] px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md justify-end">
-        <div className="flex rounded-lg bg-white/10 p-0.5" role="group" aria-label={t.pilihBahasa}>
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#0EA5E9]" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+      <div className="flex flex-col items-center gap-3.5 px-6 pb-7 pt-12 text-white sm:pt-16">
+        <LogoLebah />
+        <div className="text-center">
+          <p className="text-3xl font-extrabold tracking-tight">Olympic Edu</p>
+          <p className="mt-1 text-sm text-[#DBEAFE]">{t.tagline}</p>
+        </div>
+        <div className="flex gap-1 rounded-xl bg-white/15 p-1" role="group" aria-label={t.pilihBahasa}>
           {BAHASA.map((b) => (
             <button
               key={b.kode}
@@ -22,24 +48,15 @@ function Bingkai({ children }: { children: ReactNode }) {
               title={b.nama}
               aria-pressed={bahasa === b.kode}
               onClick={() => setBahasa(b.kode)}
-              className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition-colors ${bahasa === b.kode ? "bg-gradient-to-r from-[#E0F2FE] to-[#7DD3FC] text-[#0B1F4B]" : "text-white/80 hover:bg-white/10"}`}
+              className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition-colors ${bahasa === b.kode ? "bg-[#E0F2FE] text-[#0B1F4B]" : "text-white hover:bg-white/10"}`}
             >
               {b.label}
             </button>
           ))}
         </div>
       </div>
-      <main className="mx-auto mt-6 w-full max-w-md">
-        <div className="flex items-center justify-center gap-3 text-white">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-navy-700 to-utama text-3xl font-extrabold text-sigma ring-1 ring-white/20" aria-hidden="true">
-            Σ
-          </span>
-          <span className="leading-tight">
-            <span className="block text-2xl font-extrabold tracking-tight">Olympic Edu</span>
-            <span className="block text-sm text-white/70">{t.tagline}</span>
-          </span>
-        </div>
-        <div className="mt-6 rounded-3xl bg-white p-6 shadow-kartu sm:p-8">{children}</div>
+      <main className="flex-1 rounded-t-[32px] bg-white px-6 pb-8 pt-7 sm:mx-auto sm:mb-16 sm:w-full sm:max-w-md sm:flex-none sm:rounded-3xl sm:p-8 sm:shadow-kartu" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 32px)" }}>
+        {children}
       </main>
     </div>
   );
@@ -79,7 +96,6 @@ export default function Masuk({ onMasuk }: { onMasuk: (s: Sesi) => void }) {
   return (
     <Bingkai>
       <h1 className="text-2xl font-extrabold text-tinta">
-        <span aria-hidden="true">🐝 </span>
         {t.akunJudulMasuk}
       </h1>
       <p className="mt-1 text-sm text-redup">{t.akunIsiMasuk}</p>
@@ -99,15 +115,18 @@ export default function Masuk({ onMasuk }: { onMasuk: (s: Sesi) => void }) {
           </div>
         </label>
         <Galat pesan={galat} />
-        <Tombol type="submit" disabled={proses} className="w-full py-3.5 text-base">
+        <Tombol type="submit" disabled={proses} className="h-14 w-full rounded-2xl text-[17px] font-extrabold">
           {proses ? t.akunMenunggu : t.akunMasuk}
         </Tombol>
       </form>
 
-      <div className="mt-6 rounded-2xl bg-gradient-to-br from-[#EFF6FF] to-[#E0F2FE] p-4 text-sm text-tinta ring-1 ring-[#BFDBFE]">
-        <p className="font-bold">{t.akunBelumPunya}</p>
-        <p className="mt-1 text-redup">{t.akunHubungiAdmin}</p>
-        {KONTAK_ADMIN && <p className="mt-2 font-bold text-utama">{KONTAK_ADMIN}</p>}
+      <div className="mt-6 flex items-start gap-3 rounded-2xl bg-[#EFF6FF] p-4 text-sm text-tinta">
+        <Ikon nama="pesan" className="mt-0.5 h-[22px] w-[22px] shrink-0 text-[#1E40AF]" />
+        <div>
+          <p className="font-bold">{t.akunBelumPunya}</p>
+          <p className="mt-1 leading-relaxed text-[#334155]">{t.akunHubungiAdmin}</p>
+          {KONTAK_ADMIN && <p className="mt-2 select-all font-bold text-utama">{KONTAK_ADMIN}</p>}
+        </div>
       </div>
       <p className="mt-3 text-center text-xs text-redup">{t.akunLupa}</p>
     </Bingkai>
@@ -139,7 +158,6 @@ export function LengkapiProfil({ sesi, onSelesai, onKeluar }: { sesi: Sesi; onSe
   return (
     <Bingkai>
       <h1 className="text-2xl font-extrabold text-tinta">
-        <span aria-hidden="true">👋 </span>
         {t.akunJudulProfil}
       </h1>
       <p className="mt-1 text-sm text-redup">{t.akunIsiProfil(sesi.username)}</p>
@@ -159,7 +177,7 @@ export function LengkapiProfil({ sesi, onSelesai, onKeluar }: { sesi: Sesi; onSe
           </select>
         </label>
         <Galat pesan={galat} />
-        <Tombol type="submit" disabled={proses} className="w-full py-3.5 text-base">
+        <Tombol type="submit" disabled={proses} className="h-14 w-full rounded-2xl text-[17px] font-extrabold">
           {proses ? t.akunMenunggu : t.akunSimpanProfil}
         </Tombol>
       </form>

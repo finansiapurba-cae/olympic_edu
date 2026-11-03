@@ -4,6 +4,7 @@ import Dialog from "../components/Dialog";
 import MathText from "../components/MathText";
 import Tombol from "../components/Tombol";
 import Visualisasi from "../components/Visualisasi";
+import Ikon from "../components/Ikon";
 import { KATEGORI_OSN, meta, muatPaket, muatSoal } from "../data/bank";
 import { useBahasa, type Kamus } from "../i18n";
 import { POIN, akurasi, catatJawaban, catatLewati, kunciKelompok, mulaiPutaranBaru, salahUntukKelas, simpanSesi } from "../lib/progres";
@@ -278,77 +279,86 @@ export default function Latihan({
   const sisaWaktu = batasDetik !== null ? batasDetik - detik : null;
   const nomorPaket = mode === "paket" ? pool.findIndex((s) => s.id === soal.id) + 1 : 0;
 
+  // Jawaban pendek (angka, pecahan) muat dua kolom di HP; kalimat panjang satu kolom.
+  const pendek = HURUF.every((h) => teks.pilihan[h].replace(/\$[^$]*\$/g, "xxxxx").length <= 14);
+
   return (
-    <Bingkai refKartu={kartuRef}>
-      <div className="flex flex-wrap items-center gap-2">
-        <Chip>{label}</Chip>
-        <Chip>{labelMode}</Chip>
-        {mode !== "paket" && <Chip halus>{t.gaya(soal.kategori)}</Chip>}
-        <div className="ml-auto flex items-center gap-2">
+    <BingkaiSoal refKartu={kartuRef}>
+      <div className="sticky top-0 z-20 -mx-4 mb-4 border-b border-garis bg-white px-4 pb-3 sm:static sm:mx-0 sm:mb-5 sm:border-0 sm:bg-transparent sm:p-0" style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 12px)" }}>
+        <div className="flex items-center gap-2.5">
+          <button type="button" onClick={keBeranda} aria-label={t.kembali} className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#F1F5F9] text-tinta hover:bg-[#E2E8F0]">
+            <Ikon nama="kembali" className="h-[22px] w-[22px]" tebal={2.3} />
+          </button>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold text-redup">
+              {label} · {labelMode}
+            </p>
+            <p className="truncate text-base font-extrabold text-tinta">{nomorPaket ? t.nomorSoal(nomorPaket, pool.length) : `${t.soal} ${sesi.dijawab + (diperiksa ? 0 : 1)}`}</p>
+          </div>
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold tabular-nums ${
-              sisaWaktu !== null && sisaWaktu <= 60 ? "bg-salah-muda text-salah" : "bg-halaman text-tinta"
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-sm font-extrabold tabular-nums ${
+              sisaWaktu !== null && sisaWaktu <= 60 ? "bg-salah-muda text-salah" : "bg-[#F1F5F9] text-tinta"
             }`}
             aria-label={sisaWaktu !== null ? t.sisaWaktu : t.waktuBerjalan}
           >
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .2.08.39.22.53l3 3a.75.75 0 101.06-1.06l-2.78-2.78V5z" clipRule="evenodd" />
-            </svg>
+            <Ikon nama="jam" className="h-4 w-4" tebal={2.3} />
             {sisaWaktu !== null ? formatWaktu(sisaWaktu) : formatWaktu(detik)}
           </span>
-          <Tombol varian="teks" className="px-3 py-1.5 text-sm" onClick={() => akhiri("manual")}>
+          <Tombol varian="teks" className="shrink-0 px-2.5 py-2 text-sm" onClick={() => akhiri("manual")}>
             {t.selesai}
           </Tombol>
         </div>
+        <div className="mt-3">
+          <BarKemajuan nilai={kemajuan.nilai} maks={kemajuan.maks} label={mode === "ulang" ? t.kemajuanUlang : t.kemajuanPutaran} />
+        </div>
       </div>
 
-      <div className="mt-5">
-        <BarKemajuan nilai={kemajuan.nilai} maks={kemajuan.maks} label={mode === "ulang" ? t.kemajuanUlang : t.kemajuanPutaran} />
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip>{soal.topik[bahasa]}</Chip>
+        <span className="rounded-full bg-[#FFF4D6] px-3 py-1 text-xs font-extrabold text-[#92400E]">
+          {t.tingkat[soal.tingkat]} · {t.poin(POIN[soal.tingkat])}
+        </span>
+        {mode !== "paket" && <Chip halus>{t.gaya(soal.kategori)}</Chip>}
+        <span className="ml-auto text-xs font-bold tabular-nums text-redup" aria-label={`${t.benar} ${sesi.benar}, ${t.salah} ${sesi.salah}, ${t.skor} ${sesi.skor}`}>
+          <span className="text-benar">✓ {sesi.benar}</span> · <span className="text-salah">✗ {sesi.salah}</span> · {sesi.skor}
+        </span>
       </div>
 
-      <dl className="mt-4 grid grid-cols-4 gap-2 rounded-xl bg-gradient-to-r from-utama-muda via-[#EEF6FF] to-[#E0F2FE] p-3 text-center tabular-nums ring-1 ring-garis">
-        {[
-          [t.soal, sesi.dijawab + (diperiksa ? 0 : 1)],
-          [t.benar, sesi.benar],
-          [t.salah, sesi.salah],
-          [t.skor, sesi.skor],
-        ].map(([k, v]) => (
-          <div key={k}>
-            <dt className="text-[11px] font-semibold uppercase tracking-wide text-redup">{k}</dt>
-            <dd className="text-lg font-extrabold text-tinta">{v}</dd>
+      <h1 className="mt-3 text-xl font-extrabold leading-snug tracking-[-0.01em] text-tinta sm:text-2xl">
+        <MathText text={teks.pertanyaan} />
+      </h1>
+      {(teks.visual ?? soal.visual) && <Visualisasi spes={(teks.visual ?? soal.visual)!} tampil={diperiksa} />}
+
+      {diperiksa && (
+        <div className={`mt-5 flex items-center gap-3 rounded-2xl p-3.5 ${benar ? "bg-benar-muda" : "bg-salah-muda"}`} aria-live="polite">
+          <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-white ${benar ? "bg-benar" : "bg-salah"}`}>
+            <Ikon nama={benar ? "centang" : "silang"} className="h-6 w-6" tebal={3} />
+          </span>
+          <div className="min-w-0">
+            <p className={`text-lg font-extrabold ${benar ? "text-benar" : "text-salah"}`}>{benar ? t.benarHebat : t.belumTepat}</p>
+            <p className="text-sm text-tinta">{benar ? (progres.streak > 1 ? t.beruntunN(progres.streak) : t.benarPoin(POIN[soal.tingkat])) : t.belumTepatSub}</p>
           </div>
-        ))}
-      </dl>
+        </div>
+      )}
 
-      <div className="mt-6">
-        <p className="text-sm font-semibold text-redup">
-          {nomorPaket ? `${t.nomorSoal(nomorPaket, pool.length)} · ` : ""}
-          {soal.topik[bahasa]} · {t.tingkat[soal.tingkat]} ({t.poin(POIN[soal.tingkat])})
-        </p>
-        <h1 className="mt-2 text-xl font-bold leading-relaxed text-tinta sm:text-2xl">
-          <MathText text={teks.pertanyaan} />
-        </h1>
-        {(teks.visual ?? soal.visual) && <Visualisasi spes={(teks.visual ?? soal.visual)!} tampil={diperiksa} />}
-      </div>
-
-      <div className="mt-6 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label={t.pilihanJawaban}>
+      <div className={`mt-5 grid gap-2.5 ${pendek ? "grid-cols-2" : "sm:grid-cols-2"}`} role="radiogroup" aria-label={t.pilihanJawaban}>
         {HURUF.map((h) => {
           const dipilih = pilihan === h;
           const kunci = soal.kunci === h;
-          let gaya = "border-garis bg-white hover:border-utama/50 hover:bg-utama-muda/50";
-          let bulat = "bg-halaman text-tinta";
+          let gaya = "border-[1.5px] border-[#CBD5E1] bg-white hover:border-utama/50 hover:bg-utama-muda/40";
+          let bulat = "bg-[#F1F5F9] text-tinta";
           if (!diperiksa && dipilih) {
-            gaya = "border-utama bg-utama-muda ring-2 ring-utama/20";
-            bulat = "bg-utama text-white";
+            gaya = "border-[2.5px] border-[#2563EB] bg-[#EFF6FF]";
+            bulat = "bg-[#2563EB] text-white";
           }
           if (diperiksa) {
             if (kunci) {
-              gaya = "border-benar bg-benar-muda";
+              gaya = "border-[2.5px] border-benar bg-benar-muda";
               bulat = "bg-benar text-white";
             } else if (dipilih) {
-              gaya = "border-salah bg-salah-muda";
+              gaya = "border-[2.5px] border-salah bg-salah-muda";
               bulat = "bg-salah text-white";
-            } else gaya = "border-garis bg-white opacity-60";
+            } else gaya = "border-[1.5px] border-garis bg-white opacity-60";
           }
           return (
             <button
@@ -358,9 +368,9 @@ export default function Latihan({
               aria-checked={dipilih}
               disabled={diperiksa}
               onClick={() => setPilihan(h)}
-              className={`flex min-h-[64px] items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-base font-semibold text-tinta transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-utama/25 disabled:cursor-default ${gaya}`}
+              className={`flex min-h-[60px] items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-base font-bold text-tinta transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-utama/25 disabled:cursor-default ${gaya}`}
             >
-              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-extrabold ${bulat}`}>{h}</span>
+              <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-[10px] text-sm font-extrabold ${bulat}`}>{h}</span>
               <MathText text={teks.pilihan[h]} className="min-w-0" />
             </button>
           );
@@ -368,55 +378,55 @@ export default function Latihan({
       </div>
 
       {diperiksa && (
-        <div className={`mt-6 rounded-xl border-l-4 p-4 sm:p-5 ${benar ? "border-benar bg-benar-muda" : "border-salah bg-salah-muda"}`} aria-live="polite">
-          <p className={`text-lg font-extrabold ${benar ? "text-benar" : "text-salah"}`}>{benar ? t.benarPoin(POIN[soal.tingkat]) : t.belumTepat}</p>
-          <p className="mt-1 text-tinta">
-            {t.jawabanBenar} <strong>{soal.kunci}.</strong> <MathText text={teks.pilihan[soal.kunci]} className="font-semibold" />
-          </p>
-          <h2 className="mt-4 text-sm font-bold uppercase tracking-wide text-tinta">{t.pembahasan}</h2>
-          <ol className="mt-2 grid gap-2">
+        <div className="mt-5 rounded-2xl bg-white p-4 ring-1 ring-garis sm:p-5">
+          {!benar && (
+            <p className="mb-3 text-tinta">
+              {t.jawabanBenar} <strong>{soal.kunci}.</strong> <MathText text={teks.pilihan[soal.kunci]} className="font-semibold" />
+            </p>
+          )}
+          <h2 className="text-xs font-extrabold uppercase tracking-[0.08em] text-redup">{t.pembahasan}</h2>
+          <ol className="mt-3 grid gap-2.5">
             {teks.pembahasan.map((l, i) => (
               <li key={i} className="flex gap-3 leading-relaxed text-tinta">
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-redup">{i + 1}</span>
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#EFF6FF] text-xs font-extrabold text-utama">{i + 1}</span>
                 <MathText text={l} className="min-w-0" />
               </li>
             ))}
           </ol>
           {soal.koreksi && (
-            <p className="mt-4 rounded-lg bg-white px-3 py-2 text-sm text-redup">
+            <p className="mt-4 rounded-lg bg-halaman px-3 py-2 text-sm text-redup">
               <strong className="text-tinta">{t.catatanPerbaikan}:</strong> <MathText text={soal.koreksi[bahasa]} />
             </p>
           )}
-          {pesan && <p className="mt-4 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-utama">{pesan}</p>}
+          {pesan && <p className="mt-4 rounded-lg bg-halaman px-3 py-2 text-sm font-semibold text-utama">{pesan}</p>}
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="sticky bottom-0 z-20 -mx-4 mt-6 flex items-center gap-2.5 border-t border-garis bg-white px-4 pt-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}>
         {!diperiksa ? (
-          <Tombol key="lewati" varian="kedua" onClick={lewati} className="w-full sm:w-auto">
-            {t.lewati}
-          </Tombol>
+          <>
+            <Tombol key="lewati" varian="kedua" onClick={lewati} className="h-14 rounded-2xl px-5">
+              {t.lewati}
+            </Tombol>
+            <Tombol key="periksa" onClick={periksa} disabled={!pilihan} className="h-14 flex-1 rounded-2xl text-base font-extrabold sm:ml-auto sm:max-w-[240px]">
+              {t.periksa}
+            </Tombol>
+          </>
         ) : (
-          <span className="hidden text-sm text-redup sm:inline">{t.nDijawab(sesi.dijawab)}</span>
-        )}
-        {!diperiksa ? (
-          <Tombol key="periksa" onClick={periksa} disabled={!pilihan} className="w-full sm:w-auto sm:min-w-[180px]">
-            {t.periksa}
-          </Tombol>
-        ) : (
-          <Tombol key="lanjut" onClick={() => lanjut()} className="w-full sm:w-auto sm:min-w-[180px]">
-            {t.berikutnya}
-          </Tombol>
+          <>
+            {onLaporkan && (
+              <button type="button" onClick={() => onLaporkan(soal.id)} aria-label={t.laporkanSoal} title={t.laporkanSoal} className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[1.5px] border-[#CBD5E1] bg-white text-[#475569] hover:bg-halaman">
+                <Ikon nama="bendera" className="h-[22px] w-[22px]" />
+              </button>
+            )}
+            <span className="hidden text-sm text-redup sm:inline">{t.nDijawab(sesi.dijawab)}</span>
+            <Tombol key="lanjut" onClick={() => lanjut()} className="h-14 flex-1 rounded-2xl text-base font-extrabold sm:ml-auto sm:max-w-[240px]">
+              {t.berikutnya}
+            </Tombol>
+          </>
         )}
       </div>
       <p className="mt-4 hidden text-center text-xs text-redup sm:block">{t.tips}</p>
-      {onLaporkan && (
-        <p className="mt-3 text-center">
-          <button type="button" onClick={() => onLaporkan(soal.id)} className="text-xs font-semibold text-redup underline-offset-2 hover:text-utama hover:underline">
-            🚩 {t.laporkanSoal}
-          </button>
-        </p>
-      )}
 
       {ringkasan && (
         <Dialog
@@ -443,7 +453,7 @@ export default function Latihan({
           </div>
         </Dialog>
       )}
-    </Bingkai>
+    </BingkaiSoal>
   );
 }
 
@@ -451,6 +461,17 @@ function Bingkai({ children, refKartu }: { children: ReactNode; refKartu?: Ref<H
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
       <div ref={refKartu} className="scroll-mt-4 rounded-3xl bg-white p-5 shadow-kartu sm:p-8">
+        {children}
+      </div>
+    </main>
+  );
+}
+
+/** Layar soal: di HP tanpa kartu (layar penuh seperti aplikasi), di layar lebar tetap kartu putih. */
+function BingkaiSoal({ children, refKartu }: { children: ReactNode; refKartu?: Ref<HTMLDivElement> }) {
+  return (
+    <main className="mx-auto w-full max-w-3xl sm:px-6 sm:py-10">
+      <div ref={refKartu} className="scroll-mt-4 bg-halaman px-4 sm:rounded-3xl sm:bg-white sm:p-8 sm:shadow-kartu">
         {children}
       </div>
     </main>

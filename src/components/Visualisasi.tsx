@@ -414,7 +414,7 @@ function Bagian({ s, tampil }: P) {
             </span>
             <div className="flex flex-1 flex-wrap gap-1">
               {Array.from({ length: b.n }, (_, k) => (
-                <span key={k} className="grid h-9 min-w-[2.25rem] flex-1 place-items-center rounded-lg bg-gradient-to-b from-[#DBEAFE] to-[#BFDBFE] px-1 text-xs font-extrabold text-utama ring-1 ring-[#93C5FD]" style={{ maxWidth: 72 }}>
+                <span key={k} className={`grid h-9 min-w-[2.25rem] flex-1 place-items-center rounded-lg bg-gradient-to-b from-[#DBEAFE] to-[#BFDBFE] px-0.5 font-extrabold text-utama ring-1 ring-[#93C5FD] ${String(b.nilai ?? s.nilai ?? "").length > 5 ? "text-[10px] tracking-tight" : "text-xs"}`} style={{ maxWidth: 72 }}>
                   {b.tetap ? <Lbl t={b.nilai} /> : b.nilai !== undefined || s.nilai !== undefined ? <Tanya tampil={tampil} nilai={<Lbl t={b.nilai ?? s.nilai} />} /> : ""}
                 </span>
               ))}

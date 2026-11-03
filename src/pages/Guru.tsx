@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import MathText from "../components/MathText";
-import Tombol from "../components/Tombol";
+import Ikon from "../components/Ikon";
 import { meta, muatPaket, muatSoal } from "../data/bank";
 import { useBahasa } from "../i18n";
 import { ambilDataGuru, type BarisJawaban, type BarisMasukan, type BarisProgres, type Sesi } from "../lib/akun";
@@ -204,20 +204,21 @@ export default function Guru({ sesi, onSesi }: { sesi: Sesi; onSesi: (s: Sesi) =
   const terpilih = murid.find((m) => m.user_id === dipilih);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-utama">{g.eyebrow}</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-tinta">{g.judul}</h1>
-          <p className="mt-1 max-w-2xl text-sm text-redup">{g.isi}</p>
+    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-4 rounded-3xl bg-tinta p-5 text-white sm:p-7">
+        <div className="min-w-0">
+          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#F2B53A]">{g.eyebrow}</p>
+          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{g.judul}</h1>
+          <p className="mt-1 max-w-2xl text-sm text-white/70">{g.isi}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Tombol varian="kedua" onClick={muat} disabled={memuat}>
+          <button type="button" onClick={muat} disabled={memuat} className="h-11 rounded-xl border border-white/25 px-4 text-sm font-bold text-white hover:bg-white/10 disabled:opacity-50">
             ↻ {memuat ? t.akunMenunggu : g.muatUlang}
-          </Tombol>
-          <Tombol onClick={unduhExcel} disabled={!data || mengekspor}>
-            ⬇ {mengekspor ? t.akunMenunggu : g.unduh}
-          </Tombol>
+          </button>
+          <button type="button" onClick={unduhExcel} disabled={!data || mengekspor} className="flex h-11 items-center gap-2 rounded-xl bg-[#F2B53A] px-4 text-sm font-extrabold text-[#3B2600] hover:bg-[#F5C25A] disabled:opacity-50">
+            <Ikon nama="unduh" className="h-[18px] w-[18px]" tebal={2.4} />
+            {mengekspor ? t.akunMenunggu : g.unduh}
+          </button>
         </div>
       </div>
 

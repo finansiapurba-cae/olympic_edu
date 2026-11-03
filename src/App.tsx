@@ -7,6 +7,8 @@ import Statistik from "./pages/Statistik";
 import Masuk, { LengkapiProfil } from "./pages/Masuk";
 import Masukan from "./components/Masukan";
 import Guru from "./pages/Guru";
+import Profil from "./pages/Profil";
+import MenuBawah, { type TujuanMenu } from "./components/MenuBawah";
 import { AKUN_AKTIF, AkunError, ambilProgresAkun, cekGuru, keluar, kirimJawaban, muatSesi, simpanProgresAkun, type Sesi } from "./lib/akun";
 import { periksaBadge, type Badge } from "./lib/badge";
 import { PenyediaBahasa, useBahasa } from "./i18n";
@@ -14,7 +16,7 @@ import { muatProgres, progresBaru, simpanProgres } from "./lib/progres";
 import { SHEET_URL } from "./lib/kirimHasil";
 import type { PengaturanSesi, Progres } from "./types";
 
-type Halaman = "beranda" | "latihan" | "statistik" | "guru";
+type Halaman = "beranda" | "latihan" | "statistik" | "guru" | "profil";
 
 export default function App() {
   return (
@@ -203,6 +205,17 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
     setHalaman(h);
     window.scrollTo({ top: 0 });
   };
+  // Menu bawah (HP): "Paket" membuka beranda lalu menggulir ke bagian paket soal.
+  const pilihMenu = (tujuan: TujuanMenu) => {
+    if (tujuan !== "paket") return pindah(tujuan);
+    setHalaman("beranda");
+    setTimeout(() => document.getElementById("paket-olimpiade")?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+  };
+  const keluarAkun = () => {
+    kirimKeServer();
+    onKeluar?.();
+  };
+  const sedangLatihan = halaman === "latihan";
   const mulai = (s: PengaturanSesi) => {
     setPengaturan(s);
     setKunciSesi((k) => k + 1);
@@ -211,16 +224,30 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EEF4FF] via-halaman to-[#E6F4FF] font-sans text-tinta">
-      <Navbar
-        nama={progres.nama}
-        onNama={(nama) => ubah((p) => ({ ...p, nama }))}
-        akun={sesi ? { username: sesi.username, onKeluar: () => { kirimKeServer(); onKeluar?.(); }, onMasukan: () => setMasukan({}) } : undefined}
-        halaman={halaman}
-        onPindah={pindah}
-        guru={guru}
-      />
+      {/* HP dengan akun: menu ada di bawah (MenuBawah), jadi bilah atas hanya untuk layar lebar.
+          Tanpa akun, bilah atas tetap tampil kecuali saat mengerjakan soal (layar soal punya bilahnya sendiri). */}
+      <div className={sesi || sedangLatihan ? "hidden sm:block" : ""}>
+        <Navbar
+          nama={progres.nama}
+          onNama={(nama) => ubah((p) => ({ ...p, nama }))}
+          akun={sesi ? { username: sesi.username, onKeluar: keluarAkun, onMasukan: () => setMasukan({}) } : undefined}
+          halaman={halaman === "profil" ? "beranda" : halaman}
+          onPindah={pindah}
+          guru={guru}
+          onProfil={() => pindah("profil")}
+        />
+      </div>
+      {sesi && halaman !== "beranda" && !sedangLatihan && <div className="sm:hidden" style={{ height: "env(safe-area-inset-top, 0px)" }} aria-hidden="true" />}
       {gagalSimpan && <p className="bg-[#FEF3C7] px-4 py-2 text-center text-sm font-semibold text-[#92400E]">{t.akunGagalSimpan}</p>}
-      {halaman === "beranda" && <Beranda progres={progres} awal={pengaturan} onMulai={mulai} />}
+      {halaman === "beranda" && <Beranda progres={progres} awal={pengaturan} onMulai={mulai} onMasukan={sesi ? () => setMasukan({}) : undefined} />}
+      {halaman === "profil" && (
+        <Profil
+          progres={progres}
+          akun={sesi ? { username: sesi.username, kelas: sesi.kelas, onKeluar: keluarAkun } : undefined}
+          onMasukan={sesi ? () => setMasukan({}) : undefined}
+          onGuru={guru ? () => pindah("guru") : undefined}
+        />
+      )}
       {halaman === "latihan" && (
         <Latihan
           key={kunciSesi}
@@ -254,7 +281,9 @@ function Aplikasi({ sesi, awal, onSesi, onKeluar }: { sesi?: Sesi; awal?: Progre
       {halaman === "guru" && guru && sesi && <Guru sesi={sesi} onSesi={(s) => onSesi?.(s)} />}
       {halaman === "statistik" && <Statistik progres={progres} onReset={() => setProgres(progresBaru(progres.nama))} keBeranda={() => pindah("beranda")} />}
 
-      <footer className="px-4 pb-10 pt-4 text-center text-xs text-redup">
+      {!sedangLatihan && <MenuBawah aktif={halaman as TujuanMenu} guru={guru} onPilih={pilihMenu} />}
+
+      <footer className={`px-4 pt-4 text-center text-xs text-redup ${sedangLatihan ? "pb-10" : "pb-28 sm:pb-10"}`}>
         <span className="font-semibold text-tinta">Olympic Edu</span> · olympicedu.netlify.app · {SHEET_URL ? t.footerKirim : t.footer}
       </footer>
 

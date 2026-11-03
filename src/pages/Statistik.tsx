@@ -26,24 +26,27 @@ export default function Statistik({ progres, onReset, keBeranda }: { progres: Pr
   ];
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="inline-block bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9] bg-clip-text text-xs font-bold uppercase tracking-[0.18em] text-transparent">{t.statEyebrow}</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-tinta">{t.statJudul(p.nama)}</h1>
+          <h1 className="mt-2 text-2xl font-extrabold text-tinta sm:text-3xl">{t.statJudul(p.nama)}</h1>
         </div>
         <Tombol onClick={keBeranda}>{t.mulaiLatihan}</Tombol>
       </div>
 
       <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
-        {kartu.map(([k, v, ket]) => (
-          <div key={k} className="rounded-2xl bg-white p-4 shadow-kartu sm:p-5">
-            <div className="mb-3 h-1.5 w-10 rounded-full bg-gradient-to-r from-[#1E40AF] to-[#0EA5E9]" aria-hidden="true" />
-            <p className="text-sm font-semibold text-redup">{k}</p>
-            <p className="mt-1 text-3xl font-extrabold tabular-nums text-tinta">{v}</p>
-            {ket && <p className="mt-1 text-xs text-redup">{ket}</p>}
-          </div>
-        ))}
+        {kartu.map(([k, v, ket], i) => {
+          // Kartu skor ditonjolkan (gelap dengan label madu), seperti desain aplikasi.
+          const sorot = i === kartu.length - 1;
+          return (
+            <div key={k} className={`rounded-2xl p-4 shadow-kartu sm:p-5 ${sorot ? "bg-tinta text-white" : "bg-white"}`}>
+              <p className={`text-sm font-semibold ${sorot ? "text-[#F2B53A]" : "text-redup"}`}>{k}</p>
+              <p className={`mt-1 text-3xl font-extrabold tabular-nums ${sorot ? "text-white" : "text-tinta"}`}>{v}</p>
+              {ket && <p className={`mt-1 text-xs ${sorot ? "text-white/70" : "text-redup"}`}>{ket}</p>}
+            </div>
+          );
+        })}
       </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
