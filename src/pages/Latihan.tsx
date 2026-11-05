@@ -5,6 +5,8 @@ import MathText from "../components/MathText";
 import Tombol from "../components/Tombol";
 import Visualisasi from "../components/Visualisasi";
 import Ikon from "../components/Ikon";
+import PemutarVideo from "../components/PemutarVideo";
+import { punyaVideo } from "../data/video";
 import { KATEGORI_OSN, meta, muatPaket, muatSoal } from "../data/bank";
 import { useBahasa, type Kamus } from "../i18n";
 import { POIN, akurasi, catatJawaban, catatLewati, kunciKelompok, mulaiPutaranBaru, salahUntukKelas, simpanSesi } from "../lib/progres";
@@ -54,6 +56,7 @@ export default function Latihan({
   const [idx, setIdx] = useState(0);
   const [pilihan, setPilihan] = useState<Huruf | null>(null);
   const [diperiksa, setDiperiksa] = useState(false);
+  const [video, setVideo] = useState<string | null>(null);
   const [sesi, setSesi] = useState<StatSesi>({ dijawab: 0, benar: 0, salah: 0, dilewati: 0, skor: 0 });
   const [detik, setDetik] = useState(0);
   const [ringkasan, setRingkasan] = useState(false);
@@ -341,6 +344,21 @@ export default function Latihan({
         </div>
       )}
 
+      {diperiksa && punyaVideo(soal.id) && (
+        <button
+          type="button"
+          onClick={() => setVideo(soal.id)}
+          className="mt-3 flex w-full items-center gap-3 rounded-2xl bg-tinta p-3 text-left text-white shadow-kartu hover:bg-[#16243F]"
+        >
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#F2B53A] text-[#3B2600]">
+            <svg viewBox="0 0 24 24" className="ml-0.5 h-6 w-6" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" /></svg>
+          </span>
+          <span className="min-w-0">
+            <span className="block text-base font-extrabold">{t.videoTonton}</span>
+            <span className="block text-sm text-white/70">{t.videoKet}</span>
+          </span>
+        </button>
+      )}
       <div className={`mt-5 grid gap-2.5 ${pendek ? "grid-cols-2" : "sm:grid-cols-2"}`} role="radiogroup" aria-label={t.pilihanJawaban}>
         {HURUF.map((h) => {
           const dipilih = pilihan === h;
@@ -376,6 +394,8 @@ export default function Latihan({
           );
         })}
       </div>
+
+      {video && <PemutarVideo soalId={video} onTutup={() => setVideo(null)} />}
 
       {diperiksa && (
         <div className="mt-5 rounded-2xl bg-white p-4 ring-1 ring-garis sm:p-5">

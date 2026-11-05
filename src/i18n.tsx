@@ -134,6 +134,9 @@ const id = {
   kembali: "Kembali",
   akunJudul: "Akun",
   profilBahasa: "Bahasa",
+  videoTonton: "Tonton video pembahasan",
+  videoKet: "Animasi bersuara, ± 45 detik",
+  videoJudul: "Video pembahasan",
   footer: "Latihan soal bergaya kompetisi dengan pembahasan. Progres tersimpan di perangkat ini.",
 
   eyebrow: "Latihan Kompetisi · SD",
@@ -388,6 +391,9 @@ const en: Kamus = {
   kembali: "Back",
   akunJudul: "Account",
   profilBahasa: "Language",
+  videoTonton: "Watch the explanation video",
+  videoKet: "Animated with voice, about 45 seconds",
+  videoJudul: "Explanation video",
   footer: "Competition-style practice with explanations. Progress is saved on this device.",
 
   eyebrow: "Competition Practice · Primary",
@@ -640,6 +646,9 @@ const zh: Kamus = {
   kembali: "返回",
   akunJudul: "帳號",
   profilBahasa: "語言",
+  videoTonton: "觀看解題影片",
+  videoKet: "有聲動畫，約 45 秒",
+  videoJudul: "解題影片",
   footer: "附解說的競賽風格練習題。進度儲存在這台裝置上。",
 
   eyebrow: "競賽練習 · 小學",
