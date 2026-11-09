@@ -1,0 +1,9 @@
+// Cloudflare Workers: website statis dari folder dist (dibuat oleh `npm run build`).
+{
+  "name": "olympic-edu",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
