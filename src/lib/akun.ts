@@ -213,7 +213,11 @@ export async function kirimJawaban(s: Sesi, c: CatatanJawaban) {
     const sesi = await sesiSegar(s);
     const kirim = bacaAntrian().filter((b) => b.user_id === sesi.id);
     if (!kirim.length) return;
-    const r = await panggil("/rest/v1/jawaban", { method: "POST", token: sesi.token, keepalive: true, headers: { Prefer: "return=minimal" }, body: JSON.stringify(kirim) });
+    // Jawaban yang sama (murid, soal, waktu) tidak boleh tercatat dua kali, misalnya bila dikirim ulang
+    // setelah koneksi putus. Perlu indeks unik "jawaban_unik" di Supabase; tanpa itu, kirim biasa.
+    const body = JSON.stringify(kirim);
+    let r = await panggil("/rest/v1/jawaban?on_conflict=user_id,soal_id,waktu", { method: "POST", token: sesi.token, keepalive: body.length < 60_000, headers: { Prefer: "return=minimal,resolution=ignore-duplicates" }, body });
+    if (r.status === 400) r = await panggil("/rest/v1/jawaban", { method: "POST", token: sesi.token, keepalive: body.length < 60_000, headers: { Prefer: "return=minimal" }, body });
     if (r.ok) {
       const terkirim = new Set(kirim.map((b) => `${b.waktu}|${b.soal_id}`));
       tulisAntrian(bacaAntrian().filter((b) => !terkirim.has(`${b.waktu}|${b.soal_id}`)));

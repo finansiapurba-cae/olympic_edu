@@ -143,8 +143,13 @@ export default function Latihan({
   }, [selesai, simpanRiwayat]);
   useEffect(() => () => simpanRiwayat(), [simpanRiwayat]);
 
+  // Satu soal hanya boleh diperiksa sekali, walau Enter ditekan dua kali sebelum layar sempat diperbarui.
+  const terakhirDiperiksa = useRef<string | null>(null);
   const periksa = useCallback(() => {
     if (!soal || !pilihan || diperiksa || !pool) return;
+    const giliran = `${idx}:${soal.id}`;
+    if (terakhirDiperiksa.current === giliran) return;
+    terakhirDiperiksa.current = giliran;
     const benar = pilihan === soal.kunci;
     setDiperiksa(true);
     onJawab?.(soal, pilihan, benar);
@@ -166,7 +171,7 @@ export default function Latihan({
       sudah.add(soal.id);
       if (sudah.size >= ukuran) setPesan(t.tuntas(ukuran));
     }
-  }, [soal, pilihan, diperiksa, pool, ubah, mode, kelompok, progres.sudahDikerjakan, t, onJawab]);
+  }, [soal, pilihan, diperiksa, pool, ubah, mode, kelompok, progres.sudahDikerjakan, t, onJawab, idx]);
 
   const lanjut = useCallback(
     (tanpaRingkasan = false) => {
@@ -211,7 +216,7 @@ export default function Latihan({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
-      if (["INPUT", "SELECT", "TEXTAREA"].includes(el.tagName) || ringkasan || selesai || !soal) return;
+      if (e.repeat || ["INPUT", "SELECT", "TEXTAREA"].includes(el.tagName) || ringkasan || selesai || !soal) return;
       const k = e.key.toUpperCase();
       const i = HURUF.indexOf(k as Huruf) >= 0 ? HURUF.indexOf(k as Huruf) : ["1", "2", "3", "4"].indexOf(k);
       if (i >= 0 && !diperiksa) setPilihan(HURUF[i]);

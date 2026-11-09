@@ -89,3 +89,8 @@ create policy "guru baca masukan" on public.masukan for select to authenticated 
 
 -- Akun guru: buat dulu user guru@siswa.olympicedu.app di Authentication → Users (centang Auto Confirm User).
 insert into public.guru (email) values ('guru@siswa.olympicedu.app') on conflict do nothing;
+
+-- Satu jawaban (murid, soal, waktu) hanya tercatat sekali, walau terkirim ulang setelah koneksi putus.
+delete from public.jawaban a using public.jawaban b
+  where a.id > b.id and a.user_id = b.user_id and a.soal_id = b.soal_id and a.waktu = b.waktu;
+create unique index if not exists jawaban_unik on public.jawaban (user_id, soal_id, waktu);

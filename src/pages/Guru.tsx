@@ -400,6 +400,18 @@ function DetailMurid({
     return [...peta.entries()].filter(([, x]) => x.salah > 0).sort((a, b) => b[1].salah - a[1].salah).slice(0, 8);
   }, [jawaban]);
   const salah = jawaban.filter((j) => !j.benar);
+  // Soal yang sama dijawab salah berkali-kali (misalnya lewat "Ulangi yang salah") cukup tampil sekali, dengan jumlahnya.
+  const salahPerSoal = useMemo(() => {
+    const peta = new Map<string, { j: BarisJawaban; kali: number; pilihan: Set<string> }>();
+    for (const j of salah) {
+      const x = peta.get(j.soal_id);
+      if (x) {
+        x.kali++;
+        x.pilihan.add(j.pilihan);
+      } else peta.set(j.soal_id, { j, kali: 1, pilihan: new Set([j.pilihan]) });
+    }
+    return [...peta.values()];
+  }, [salah]);
 
   return (
     <div>
@@ -421,19 +433,26 @@ function DetailMurid({
         </>
       )}
 
-      <h3 className="mt-5 text-sm font-bold uppercase tracking-wide text-redup">{g.daftarSalah(salah.length)}</h3>
+      <h3 className="mt-5 text-sm font-bold uppercase tracking-wide text-redup">{g.daftarSalah(salahPerSoal.length, salah.length)}</h3>
       {!salah.length && <p className="mt-2 text-sm text-redup">{g.belumSalah}</p>}
       <ol className="mt-2 grid gap-3">
-        {salah.slice(0, 60).map((j, i) => {
+        {salahPerSoal.slice(0, 60).map(({ j, kali, pilihan }) => {
           const tx = teksSoal(j.soal_id);
           return (
-            <li key={`${j.waktu}-${i}`} className="rounded-xl border border-garis p-3">
-              <p className="text-xs font-semibold text-redup">
+            <li key={j.soal_id} className="rounded-xl border border-garis p-3">
+              <p className="flex flex-wrap items-center gap-x-1.5 text-xs font-semibold text-redup">
                 {fmtWaktu(j.waktu)} · {j.soal_id} · {j.topik}
+                {kali > 1 && <span className="rounded-full bg-salah-muda px-2 py-0.5 font-extrabold text-salah">{g.kaliSalah(kali)}</span>}
               </p>
               <p className="mt-1 text-sm font-semibold text-tinta">{tx ? <MathText text={tx.pertanyaan} /> : j.soal_id}</p>
               <p className="mt-2 text-sm text-salah">
-                ✗ {g.jawabanMurid}: <MathText text={opsi(j.soal_id, j.pilihan)} />
+                ✗ {g.jawabanMurid}:{" "}
+                {[...pilihan].map((h, i) => (
+                  <span key={h}>
+                    {i > 0 && ", "}
+                    <MathText text={opsi(j.soal_id, h)} />
+                  </span>
+                ))}
               </p>
               <p className="text-sm text-benar">
                 ✓ {g.kunci}: <MathText text={opsi(j.soal_id, j.kunci)} />
